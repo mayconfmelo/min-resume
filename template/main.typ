@@ -3,7 +3,7 @@
 #show: resume.with(  
 	name: "John Worker",
 	title: "Work Specialist",
-	photo: image("photo.png"),
+	photo: image("assets/photo.png"),
 	personal: "Relevant personal info",
 	birth: (1997, 05, 19),
 	address: "Address (no street nor house number)",
@@ -22,7 +22,7 @@ My objective is to be hired and my goal is to work hard and earn some money.
 
 #xp(  
 	role: "Chief Work Officer",
-	place: "A Way More Cooler Corp.", 
+	place: "A Way More Cooler Corp.",
 	time: (2024, 2), 
 	skills: [
 	  - Applied the things I learned
