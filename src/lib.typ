@@ -7,7 +7,6 @@
 #let resume-lang-data-state = state("resume-lang-data")
 #let resume-config-state = state("resume-config")
 
-// TODO: Check optional arguments
 #let resume(
   name: none,
   title: none,
@@ -41,7 +40,6 @@
   // Required arguments
   let req = (
     name: name,
-    birth: birth,
     address: address
   )
   for arg in req.keys() {
@@ -64,7 +62,7 @@
       )
     }
     else {
-      panic("Invalid #manual(skills) value: " + skills)
+      panic("Invalid #resume(skills) value")
     }
   }
   
@@ -131,19 +129,37 @@
     )
     #title
   ]
-  v(1em)
+  v(0.5em)
   
   // Insert photo, if any
   if type(photo) == content {
-    box(width: 5.75em, height: 5.75em)[
-      #photo
-    ]
+    box(
+      width: 5em,
+      height: 5em,
+      inset: 0pt,
+      outset: 0pt,
+      photo
+    )
   }
 
-  box(width: 1fr)[
-    #align(right)[
+  box(
+    width: 1fr,
+    height: 5em,
+    inset: 0pt,
+    outset: 0pt,
+  )[
+    #align(right + top)[
       // Relevant personal information, if any
-      #if personal != none [#personal, ]
+      #if personal != none {
+        personal
+        
+        if birth != none {
+          ", "
+        }
+        else {
+          "."
+        }
+      }
       // Age calculation using birth date, if any:
       #if birth != none {
         // Tranform (yyyy, mm, dd) into datetimes
@@ -197,7 +213,6 @@
           phone.replace(regex("[ \+\-\(\)]+"), "")
         )[#phone-display]
       }
-      #v(1em)
     ]
   ]
   
@@ -236,12 +251,15 @@
           cfg.dept = linguify("hr-dept")
         }
         cfg.dept
+      } else if type(cfg.enterprise) != bool {
+        panic("Invalid #resume(letter) value")
       }
     ]
     // Letter sender:
     box(
       width: 1fr,
-      align(right + top, [
+      height: 2em,
+      align(top + right, [
         // Get name and title from `#resume` using states
         #context resume-name-state.get()
         #linebreak()
@@ -410,7 +428,7 @@
     pad(left: 1em)[#skills]
   }
   else {
-    panic("Invalid skills value: " + skills)
+    panic("Invalid skills value: must be 'inline' or 'list'")
   }
 }
 
@@ -459,7 +477,7 @@
     skill-list
   }
   else {
-    panic("Invalid skills value: " + skills)
+    panic("Invalid skills value: must be 'inline' or 'list'")
   }
 }
 
