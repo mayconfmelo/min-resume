@@ -6,7 +6,9 @@ authors = ["Maycon F. Melo <@mayconfmelo>"]
 license = "MIT-0"
 description = "Simple and professional résumé for professional people"
 categories = [ "cv", "office" ]
-keywords = [ "resume", "résumé", "curriculo", "currículo brasileiro" ]
+keywords = [
+  "resume", "résumé", "curriculum", "curriculo", "currículo brasileiro"
+]
 repository = "https://github.com/mayconfmelo/min-resume"
 exclude = [
   "dev/",
