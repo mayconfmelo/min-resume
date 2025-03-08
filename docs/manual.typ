@@ -79,57 +79,40 @@ Those are the full list of options available and its default values:
 Seems like an awfull lot to start with, but let's just break down all this to
 understand it better, shall we?
 
-#arg(
-  "name:", ("string", "content"),
-  required: true
-)[
+#arg("name: <- string | content <required>")[
   The name of the résumé owner; generally your name, or someone you know.
 ]
 
-#arg(
-  "title:", ("string", "content")
-)[
+#arg("title: <- string | content")[
   The résumé owner title or main occupation; keep it short and concise, just one
   line is enough.
 ]
 
-#arg(
-  "photo:", "none"
-)[
+#arg("photo: <- none")[
   A photo of the résumé owner. It is not a trending practice nowadays, but if
   needed is supported.
 ]
 
-#arg(
-  "personal:", ("string", "content")
-)[
+#arg("personal: <- string | content")[
   Some general personal information, like nationality, or social status, or
   really anything that describes you a little bit.
 ]
 
-#arg(
-  "birth:", ("string", "content")
-)[
+#arg("birth: <- string | content")[
   Date of birth, in format `(yyyy, mm, dd)`. Used just to calculate the
   age, the datebitselv is not disclosed.
 ]
 
-#arg(
-  "address:", ("string", "content")
-)[
+#arg("address: <- string | content")[
   General address --- no street name nor house number needs to be disclosed.
 ]
 
-#arg(
-  "email:", ("string", "content")
-)[
+#arg("email: <- string | content")[
   Email address. Will have a _mailto:_ hyperlink to conveniently send emails to
   it.
 ]
 
-#arg(
-  "phone:", "string"
-)[
+#arg("phone: <- string")[
   Phone number, starting with a country code in format `+N` where `N` is a number,
   separated from the phone number itself. Spaces, parenthesis and dashes can be
   freely used as separators inside the number.
@@ -137,66 +120,46 @@ understand it better, shall we?
   For example: `+1 (000) 000-0000`.
 ]
 
-#arg(
-  "date:", "array"
-)[
+#arg("date: <- array")[
   Defines the document date --- used only to set ```typc document(date)``` option.
 ]
 
-#arg(
-  "show-country-code:", "boolean"
-)[
+#arg("show-country-code: <- boolean")[
   Defines whether the phone number will be printed as is or without the country
   code. For a domestic résumé this option can be `false`, but it is better to
   set it `true` when creating a résumé for some international job offer.
 ]
 
-#arg(
-  "paper:", "string"
-)[
+#arg("paper: <- string")[
   Defines the page paper type --- and its size therefore.
 ]
 
-#arg(
-  "lang:", "string"
-)[
+#arg("lang: <- string")[
   Defines the language of the written text.
 ]
 
-#arg(
-  "justify:", "boolean"
-)[
+#arg("justify: <- boolean")[
   Defines if the text will have justified aligment.
 ]
 
-#arg(
-  "line-space:", "length"
-)[
+#arg("line-space: <- length")[
   Defines the space between lines in the document.
 ]
 
-#arg(
-  "par-margin:", "length"
-)[
+#arg("par-margin: <- length")[
   Defines the document margin space after each paragraph. Set it the same as `line-space`
   to remove get paragraphs without additional space in between.
 ]
 
-#arg(
-  "margin:", "length"
-)[
+#arg("margin: <- length")[
   Defines the document margins.
 ]
 
-#arg(
-  "font:", ("string", "array")
-)[
+#arg("font: <- string | array")[
   Defines the font families used for the text: a principal font and its falbacks.
 ]
 
-#arg(
-  "font-size:", "length"
-)[
+#arg("font-size: <- length")[
   Defines the size of the text in the document.
 ]
 
@@ -214,24 +177,17 @@ understand it better, shall we?
 
 Adds a professional letter, in its own page.
 
-#arg(
-  "enterprise", ("string", "boolean"),
-  required: true
-)[
+#arg("enterprise <- string | boolean <required>")[
   The name of the letter receiver --- an enterprise. If the résumé is created to
   no enterprise in particular, just set it to `true` to generate a letter without
   receiver.
 ]
 
-#arg(
-  "dept:", "string"
-)[
+#arg("dept: <- string")[
   The name used for the enteprise's department which will receive the letter.
 ]
 
-#arg(
-  "body", "content"
-)[
+#arg("body <- content")[
   The letter content.
 ]
 
@@ -254,52 +210,39 @@ Adds a professional letter, in its own page.
 
 Adds a job experience entry.
 
-#arg(
-  "role:", ("string", "content"),
-  required: true
-)[
+#arg("role: <- string | content <required>")[
   The occupation name or role played in this job.
 ]
 
-#arg(
-  "place:", ("string", "content"),
-  required: true
-)[
+#arg("place: <- string | content <required>")[
   The place of work or enteprise name.
 ]
 
-#arg(
-  "time:", "array",
-  required: true
-)[
+#arg("time: <- array <required>")[
   The duration of this work expecience, in format `("yyyy-initial", "mm-initial",
   "yyyy-final", "mm-final")`. At least one item, the initial year, must be
   provided and the other values not provided will fallback to the current year
   and month --- thus defining it a current job.
 ]
 
-#arg(
-  "actual-job:", "boolean"
-)[
+#arg("actual-job: <- boolean")[
   //TODO: why does this argument even exists?!
 ]
 
-#arg(
-  "skills:", ("string", "content")
-)[
+#arg("skills: <- string | content")[
   Skills learned and used, as well as goals acomplished. Can be a string or a
   content with a unumbered list (topics) inside, shown as inline topics.
 ]
 
 #arg(
-  "skills-list:", "boolean"
+  "skills-list: <- boolean"
 )[
   Forces the list of skills to be shown as standard lists instead of inline
   topics.
 ]
 
 #arg(
-  "skills-sep:", "string"
+  "skills-sep: <- string"
 )[
   Defines the separator for each inline topic item.
 ]
@@ -323,53 +266,40 @@ Adds a job experience entry.
 
 Adds a education entry, like a course or graduation.
 
-#arg(
-  "role:", ("string", "content"),
-  required: true
-)[
+#arg("role: <- string | content <required>")[
   The name of the course or graduation.
 ]
 
-#arg(
-  "place:", ("string", "content"),
-  required: true
-)[
+#arg("place: <- string | content <required>")[
   The institutuion or university of the course.
 ]
 
-#arg(
-  "time:", "array",
-  required: true
-)[
+#arg("time: <- array <required>")[
   The duration of this course, in format `("yyyy-initial", "mm-initial",
   "yyyy-final", "mm-final")`. At least one item, the initial year, must be
   provided and the other values not provided will fallback to the current year
   and month --- thus defining it a current course.
 ]
 
-#arg(
-  "actual-course:", "boolean"
-)[
+#arg("actual-course: <- boolean")[
   //TODO: why does this argument even exists?!
 ]
 
-#arg(
-  "skills:", ("string", "content")
-)[
+#arg("skills: <-string | content")[
   Skills learned and developed, as well as research and goals acomplished. Can
   be a string or a content with a unumbered list (topics) inside, shown as
   inline topics.
 ]
 
 #arg(
-  "skills-list:", "boolean"
+  "skills-list: <- boolean"
 )[
   Forces unumbered list of skills to be shown as standard lists instead of.inline
   topics.
 ]
 
 #arg(
-  "skills-sep:", "string"
+  "skills-sep: <- string"
 )[
   Defines the separator for each inline topic item.
 ]
@@ -388,16 +318,12 @@ Generates a Linkedin profile QR code:
 )
 ```
 
-#arg(
-  "user", "string"
-)[
+#arg("user <- string")[
   The Linkedin username, not the URL. Can be obtained from the profile URL, in
   format `https://www.linkedin.com/in/USERNAME`.
 ]
 
-#arg(
-  "size", "length"
-)[
+#arg("size <- length")[
   The size of the QR code created.
 ]
 
@@ -416,30 +342,22 @@ Allows to insert a list of inline topics
 ]
 ```
 
-#arg(
-  "skills:", ("string", "content")
-)[
+#arg("skills: <- string | content")[
   Skills learned and developed, as well as research and goals acomplished. Can
   be a string or a content with a unumbered list inside, shown as
   inline topics.
 ]
 
-#arg(
-  "skills-list:", "boolean"
-)[
+#arg("skills-list: <- boolean")[
   Forces unumbered list of skills to be shown as standard lists instead of inline
   topics.
 ]
 
-#arg(
-  "skills-sep:", "string"
-)[
+#arg("skills-sep: <- string")[
   Defines the separator for each inline topic item.
 ]
 
-#arg(
-  "body", ("string", "content")
-)[
+#arg("body <- string | content")[
   The inline list itself: a string or a content block with a unumbered list inside.
 ]
 
