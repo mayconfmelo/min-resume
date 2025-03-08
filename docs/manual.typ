@@ -1,5 +1,4 @@
 #import "@preview/min-manual:0.1.0": manual, arg
-// TODO: document config system
 
 #show: manual.with(
   title: "Minimal Résumé",
@@ -112,7 +111,7 @@ understand it better, shall we?
   proper `#datetime`.
 ]
 
-#arg("address: <- string | content")[
+#arg("address: <- string | content <required>")[
   General address --- no street name nor house number needs to be disclosed.
 ]
 
@@ -143,7 +142,7 @@ understand it better, shall we?
 ]
 
 #arg("letter: <- dictionary | string | boolean")[
-  Global letter configuration; can take a dictionary like:
+  Global letter configuration; can take a dictionary that must contain:
   
   ```typ
   (enterprise: ENTERPRISE, dept: DEPARTMENT)
@@ -154,7 +153,7 @@ understand it better, shall we?
 ]
 
 #arg("skills: <- dictionary | string")[
- Global skills configuration; can take a dictionary like:
+ Global skills configuration; can take a dictionary that must contain:
   
   ```typ
   (display: MODE, sep: SEPARATOR)
