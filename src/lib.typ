@@ -87,6 +87,9 @@
       day: int(date.at(2))
     )
   }
+  else if type(date) != datetime {
+    panic("Invalid #resume(date) value: must be an array or datetime")
+  }
   
   set document(
     title: name + " - " + title,
