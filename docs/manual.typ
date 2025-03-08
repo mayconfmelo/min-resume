@@ -1,4 +1,5 @@
 #import "@preview/min-manual:0.1.0": manual, arg
+// TODO: document config system
 
 #show: manual.with(
   title: "Minimal Résumé",
@@ -33,8 +34,8 @@
 Generate modern and direct to the point résumé, fit for today's Human Resources
 demands of assertiveness. There is no colorfull designs, figures, creative fonts,
 nor anything that diverts attention when reading the document: is just plain old
-black sans-serif text in white paper. In fact, if one see only the resulting
-résumé, may say it was written in Word, maybe --- but it was written with all of
+black sans-serif text in white paper. In fact, if one sees only the resulting
+résumé, may say it was written in Word --- but it was written with all of
 Typst's benefits and conveniences.
 
 As this package was written by a Brazilian, it was made using some of the
@@ -63,6 +64,15 @@ Those are the full list of options available and its default values:
   email: none,
   phone: none,
   date: datetime.today(),
+  show-country-code: false,
+  letter: (
+    enterprise: none,
+    dept: auto,
+  ),
+  skills: (
+    display: "inline",
+    sep: "  " + sym.bullet + "  ",
+  ),
   paper: "a4",
   lang: "en",
   lang-data: toml("assets/lang.toml"),
@@ -72,7 +82,6 @@ Those are the full list of options available and its default values:
   margin: 0.75in,
   font: "Arial",
   font-size: 11.5pt,
-  show-country-code: false,
 )
 ```
 
@@ -84,8 +93,8 @@ understand it better, shall we?
 ]
 
 #arg("title: <- string | content")[
-  The résumé owner title or main occupation; keep it short and concise, just one
-  line is enough.
+  The title or main occupation of the résumé owner; keep it short and concise,
+  just one line is enough.
 ]
 
 #arg("photo: <- none")[
@@ -95,12 +104,12 @@ understand it better, shall we?
 
 #arg("personal: <- string | content")[
   Some general personal information, like nationality, or social status, or
-  really anything that describes you a little bit.
+  really anything that describes the résumé owner a little bit.
 ]
 
-#arg("birth: <- string | content")[
-  Date of birth, in format `(yyyy, mm, dd)`. Used just to calculate the
-  age, the datebitselv is not disclosed.
+#arg("birth: <- array | datetime")[
+  Date of birth of résumé owner; an array, in format `(yyyy, mm, dd)`; or a
+  proper `#datetime`.
 ]
 
 #arg("address: <- string | content")[
@@ -108,26 +117,51 @@ understand it better, shall we?
 ]
 
 #arg("email: <- string | content")[
-  Email address. Will have a _mailto:_ hyperlink to conveniently send emails to
-  it.
+  Email address of the résumé owner. Printed with a _mailto:_ hyperlink to
+  conveniently send emails.
 ]
 
 #arg("phone: <- string")[
-  Phone number, starting with a country code in format `+N` where `N` is a number,
-  separated from the phone number itself. Spaces, parenthesis and dashes can be
-  freely used as separators inside the number.
+  Phone number of the résumé owner, starting with a country code in format
+  `+CODE` where `CODE` is a number, separated from the phone number itself.
+  Spaces, parenthesis, and dashes can be freely used as separators inside the
+  phone number.
   
-  For example: `+1 (000) 000-0000`.
+  US phone example: `+1 (000) 000-0000`.
 ]
 
-#arg("date: <- array")[
-  Defines the document date --- used only to set ```typc document(date)``` option.
+#arg("date: <- array | datetime")[
+  Defines the document date --- used only to set ```typc #document(date)``` option.
 ]
 
 #arg("show-country-code: <- boolean")[
   Defines whether the phone number will be printed as is or without the country
   code. For a domestic résumé this option can be `false`, but it is better to
   set it `true` when creating a résumé for some international job offer.
+  
+  `show-country-code: false` example: `(000) 000-0000`.
+]
+
+#arg("letter: <- dictionary | string | boolean")[
+  Global letter configuration; can take a dictionary like:
+  
+  ```typ
+  (enterprise: ENTERPRISE, dept: DEPARTMENT)
+  ```
+  
+  If the value is `STRING`, passes `(enterprise: STRING)`; and if the value is a
+  boolean, just hide or show the letter using the default configurations.
+]
+
+#arg("skills: <- dictionary | string")[
+ Global skills configuration; can take a dictionary like:
+  
+  ```typ
+  (display: MODE, sep: SEPARATOR)
+  ```
+  
+  If the value is `STRING`, passes `(display: STRING)`, where the string must be
+  whether `"inline"` or `"list"`.
 ]
 
 #arg("paper: <- string")[
@@ -168,30 +202,29 @@ understand it better, shall we?
 
 ```typ
 #letter(
-  enterprise,
-  dept: linguify("hr-dept"),
-)[
   body
-]
+)
 ```
 
-Adds a professional letter, in its own page.
+Adds a professional letter, in its own page. Receives configuration from
+`#resume(letter)` and a letter `body` content.
 
-#arg("enterprise <- string | boolean <required>")[
-  The name of the letter receiver --- an enterprise. If the résumé is created to
-  no enterprise in particular, just set it to `true` to generate a letter without
-  receiver.
+#arg("letter.enterprise <- string | boolean")[
+  Received from `#resume`. The name of the letter receiver --- an enterprise. If
+  the résumé is created to no enterprise in particular, just set it to `true` to
+  generate a letter without receiver; `false` hides the letter.
 ]
 
-#arg("dept: <- string")[
-  The name used for the enteprise's department which will receive the letter.
+#arg("letter.dept: <- auto | string | content")[
+  Received from `#resume`. The name used for the enteprise's department which
+  will receive the letter. If set as `auto`, try to automatically retrieve
+  the appropriate name for _Human Resources Department_ in `text.lang`, or
+  fallback to English if not found.
 ]
 
 #arg("body <- content")[
   The letter content.
 ]
-
-#pagebreak()
 
 
 = Job Experience Command
@@ -200,15 +233,14 @@ Adds a professional letter, in its own page.
 #xp(
   role: none,
   place: none,
-  time: none
-  actual-job: false,
+  time: none,
   skills: none,
-  skills-list: false,
-  skills-sep: "  " + sym.bullet + "  "
+  config: none,
 )
 ```
 
-Adds a job experience entry.
+Adds a job experience entry. Receives configuration from `#resume(skills)` and
+some aeguments on its own.
 
 #arg("role: <- string | content <required>")[
   The occupation name or role played in this job.
@@ -219,35 +251,38 @@ Adds a job experience entry.
 ]
 
 #arg("time: <- array <required>")[
-  The duration of this work expecience, in format `("yyyy-initial", "mm-initial",
-  "yyyy-final", "mm-final")`. At least one item, the initial year, must be
-  provided and the other values not provided will fallback to the current year
-  and month --- thus defining it a current job.
-]
-
-#arg("actual-job: <- boolean")[
-  //TODO: why does this argument even exists?!
+  The duration of this work expecience, in format \
+  `(YYYY-INITIAL, MM-INITIAL, YYYY-FINAL, MM-FINAL)`, where at least the
+  `YYYY-INITIAL` must be provided, and all omitted values will fallback to the
+  current year and month --- thus defining it a current job.
 ]
 
 #arg("skills: <- string | content")[
   Skills learned and used, as well as goals acomplished. Can be a string or a
-  content with a unumbered list (topics) inside, shown as inline topics.
+  content with a unumbered list (topics) inside, shown as inline topics by
+  default.
+]
+
+#arg("config: <- dictionary | none")[
+  Locally override any global configurations received by `#resume(skills)`.
+  Applicable to the current `#xp` only.
 ]
 
 #arg(
-  "skills-list: <- boolean"
+  "skills.display: <- string"
 )[
-  Forces the list of skills to be shown as standard lists instead of inline
-  topics.
+  Received from `#resume(skills)`. Make the skills list an `"inline"` topic list
+  (saves space) or a proper `"list"`. Can be overriden using the
+  `config: (display)` argument.
 ]
 
 #arg(
-  "skills-sep: <- string"
+  "skills.sep: <- string | content"
 )[
-  Defines the separator for each inline topic item.
+  Received from `#resume(skills)`. Defines the separator for each inline topic
+  item (when `display: "inline"`). Can be overriden using the `config: (sep)`
+  argument.
 ]
-
-#pagebreak()
 
 
 = Education Command
@@ -256,60 +291,59 @@ Adds a job experience entry.
 #edu(
   course: none,
   place: none,
-  time: (2025, 1),
-  actual-course: false,
+  time: none,
   skills: none,
-  skills-list: false,
-  skills-sep: sym.bullet
+  config: none,
 )
 ```
 
-Adds a education entry, like a course or graduation.
+Adds an education entry, like a course or graduation. Receives configuration
+from `#resume(skills)` and some arguments on its own.
 
-#arg("role: <- string | content <required>")[
-  The name of the course or graduation.
+#arg("course: <- string | content <required>")[
+  The course or graduation name.
 ]
 
 #arg("place: <- string | content <required>")[
-  The institutuion or university of the course.
+  The educational institution where the course or graduation take place.
 ]
 
 #arg("time: <- array <required>")[
-  The duration of this course, in format `("yyyy-initial", "mm-initial",
-  "yyyy-final", "mm-final")`. At least one item, the initial year, must be
-  provided and the other values not provided will fallback to the current year
-  and month --- thus defining it a current course.
+  The duration of this course or graduation, in format \
+  `(YYYY-INITIAL, MM-INITIAL, YYYY-FINAL, MM-FINAL)`, where at least the
+  `YYYY-INITIAL` must be provided, and all omitted values will fallback to the
+  current year and month --- thus defining it a current course or graduation.
 ]
 
-#arg("actual-course: <- boolean")[
-  //TODO: why does this argument even exists?!
+#arg("skills: <- string | content")[
+  Skills learned and used, as well as goals acomplished. Can be a string or a
+  content with a unumbered list (topics) inside, shown as inline topics by
+  default.
 ]
 
-#arg("skills: <-string | content")[
-  Skills learned and developed, as well as research and goals acomplished. Can
-  be a string or a content with a unumbered list (topics) inside, shown as
-  inline topics.
-]
-
-#arg(
-  "skills-list: <- boolean"
-)[
-  Forces unumbered list of skills to be shown as standard lists instead of.inline
-  topics.
+#arg("config: <- dictionary | none")[
+  Locally override any global configurations received by `#resume(skills)`.
+  Applicable to the current `#xp` only.
 ]
 
 #arg(
-  "skills-sep: <- string"
+  "skills.display: <- string"
 )[
-  Defines the separator for each inline topic item.
+  Received from `#resume(skills)`. Make the skills list an `"inline"` topic list
+  (saves space) or a proper `"list"`. Can be overriden using the
+  `config: (display)` argument.
 ]
 
-#pagebreak()
+#arg(
+  "skills.sep: <- string | content"
+)[
+  Received from `#resume(skills)`. Defines the separator for each inline topic
+  item (when `display: "inline"`). Can be overriden using the `config: (sep)`
+  argument.
+]
 
 
 = Linkedin QR Code Command
-
-Generates a Linkedin profile QR code:
 
 ```typ
 #linkedin-qrcode(
@@ -317,6 +351,8 @@ Generates a Linkedin profile QR code:
   size
 )
 ```
+
+Generates a Linkedin profile QR code.
 
 #arg("user <- string")[
   The Linkedin username, not the URL. Can be obtained from the profile URL, in
@@ -330,35 +366,41 @@ Generates a Linkedin profile QR code:
 
 = Skills Input Command
 
-Allows to insert a list of inline topics
-
 ```typ
 #skills(
-  skills-list: false,
-  skills-sep: sym.bullet,
-  skills
-)[
-  body
-]
+  config: none,
+  skill-list,
+)
 ```
 
-#arg("skills: <- string | content")[
-  Skills learned and developed, as well as research and goals acomplished. Can
-  be a string or a content with a unumbered list inside, shown as
-  inline topics.
+Allows to insert an arbitrary skill list. Receives configuration from
+`#resume(skills)` and some arguments on its own.
+
+#arg("config: <- dictionary | none")[
+  Locally override any global configurations received by `#resume(skills)`.
+  Applicable to the current `#skills` only.
 ]
 
-#arg("skills-list: <- boolean")[
-  Forces unumbered list of skills to be shown as standard lists instead of inline
-  topics.
+#arg(
+  "skills.display: <- string"
+)[
+  Received from `#resume(skills)`. Make the skills list an `"inline"` topic list
+  (saves space) or a proper `"list"`. Can be overriden using the
+  `config: (display)` argument.
 ]
 
-#arg("skills-sep: <- string")[
-  Defines the separator for each inline topic item.
+#arg(
+  "skills.sep: <- string | content"
+)[
+  Received from `#resume(skills)`. Defines the separator for each inline topic
+  item (when `display: "inline"`). Can be overriden using the `config: (sep)`
+  argument.
 ]
 
-#arg("body <- string | content")[
-  The inline list itself: a string or a content block with a unumbered list inside.
+#arg("skill-list: <- string | content")[
+  Skills learned and used, as well as goals acomplished. Can be a string or a
+  content with a unumbered list (topics) inside, shown as inline topics by
+  default.
 ]
 
 
