@@ -5,6 +5,7 @@
 #let resume-name-state = state("resume-name")
 #let resume-title-state = state("reume-title")
 #let resume-lang-data-state = state("resume-lang-data")
+#let resume-config-state = state("resume-config")
 
 // TODO: Check optional arguments
 #let resume(
@@ -18,6 +19,14 @@
   phone: none,
   date: datetime.today(),
   show-country-code: false,
+  letter: (
+    enterprise: none,
+    dept: auto,
+  ),
+  skills: (
+    display: "inline",
+    sep: "  " + sym.bullet + "  ",
+  ),
   paper: "a4",
   lang: "en",
   lang-data: toml("assets/lang.toml"),
@@ -41,6 +50,35 @@
     }
   }
   
+  if type(letter) != dictionary {
+    letter = (
+      enterprise: letter,
+      dept: auto
+    )
+  }
+  if type(skills) != dictionary {
+    if skills == "inline" or skills == "list" {
+      skills = (
+        display: skills,
+        sep: "  " + sym.bullet + "  ",
+      )
+    }
+    else {
+      panic("Invalid #manual(skills) value: " + skills)
+    }
+  }
+  
+  let config = (
+    letter: letter,
+    skills: skills,
+  )
+  
+  // State updates:
+  resume-config-state.update(config)
+  resume-name-state.update(name)
+  resume-title-state.update(title)
+  resume-lang-data-state.update(lang-data)
+  
   // Tranform (yyyy, mm, dd) date into datetime:
   if type(date) == array {
     date = datetime(
@@ -49,11 +87,6 @@
       day: int(date.at(2))
     )
   }
-  
-  // State updates:
-  resume-name-state.update(name)
-  resume-title-state.update(title)
-  resume-lang-data-state.update(lang-data)
   
   set document(
     title: name + " - " + title,
@@ -82,12 +115,7 @@
   set terms(separator: [: ], tight: true)
   
   show quote: set pad(x: 1em)
-  show heading.where(level: 1): set text(size: font-size)
-  show heading.where(level: 2): set text(size: font-size)
-  show heading.where(level: 3): set text(size: font-size)
-  show heading.where(level: 4): set text(size: font-size)
-  show heading.where(level: 5): set text(size: font-size)
-  show heading.where(level: 6): set text(size: font-size)
+  show heading: set text(size: font-size + 1pt)
   
   // Set linguify database
   set-database(lang-data)
@@ -184,11 +212,11 @@
 
 // Generate a professional letter.
 #let letter(
-  enterprise,
-  dept: linguify("hr-dept"),
   body
-) = {
-  if enterprise == true or type(enterprise) == str {
+) = context {
+  let cfg = resume-config-state.final().letter
+
+  if cfg.enterprise != false {
     import "@preview/icu-datetime:0.1.2": fmt-date
     
     // Remove résumé header:
@@ -198,14 +226,18 @@
     
     // Letter receiver, if any:
     box(width: 1fr)[
-      #if type(enterprise) == str {
-        enterprise
+      #if type(cfg.enterprise) == str or type(cfg.enterprise) == content {
+        cfg.enterprise
         linebreak()
-        dept
+        if cfg.dept == auto {
+          cfg.dept = linguify("hr-dept")
+        }
+        cfg.dept
       }
     ]
     // Letter sender:
-    box(width: 1fr,
+    box(
+      width: 1fr,
       align(right + top, [
         // Get name and title from `#resume` using states
         #context resume-name-state.get()
@@ -234,39 +266,50 @@
   role: none,
   place: none,
   time: none,
-  actual-job: false,
   skills: none,
-  skills-list: false,
-  skills-sep: "  " + sym.bullet + "  "
-) = {
+  config: none,
+) = context {
+  let cfg = resume-config-state.final().skills
+  
+  if config != none {
+    for (key, value) in config.pairs() {
+      cfg.insert(key, value)
+    }
+  }
+  
+  set par(spacing: 0.65em)
+  
   // Job role
   strong(role)
   linebreak()
+  
   // Place of work (enterprise)
   place + "  " + sym.ast.op + "  "
   
+  let time = time
   let year = datetime.today().year()
   let month = datetime.today().month()
+  let current-job = false
   
   if time.len() == 1 {
     // Become: (time.at(0), 1, THIS-YEAR, THIS-MONTH)
     time.push(1)
     time.push(year)
     time.push(month)
-    actual-job = true
+    current-job = true
   }
   else if time.len() == 2 {
     // Become: (time.at(0), time.at(1), THIS-YEAR, THIS-MONTH)
     time.push(year)
     time.push(month)
-    actual-job = true
+    current-job = true
   }
   else if time.len() == 3 {
     // Become: (time.at(0), time.at(1), time.at(2), THIS-MONTH)
     time.push(month)
     
     if time.at(2) >= year {
-      actual-job = true
+      current-job = true
     }
   }
   
@@ -293,7 +336,7 @@
     "/" + str(start.year()) + sym.dash.en
     
     // If this is the current job:
-    if actual-job == true  or end >= datetime.today() {
+    if current-job == true  or end >= datetime.today() {
       linguify("now")
     }
     else {
@@ -344,10 +387,9 @@
   }
   "."
   
-  linebreak()
   
   // Show skills inline:
-  if skills-list == false and type(skills) != str {
+  if cfg.display == "inline" and type(skills) == content {
     let items = ()
     
     for child in skills.children {
@@ -356,11 +398,16 @@
       }
     }
     
-    items.join(skills-sep)
+    linebreak()
+    items.join(cfg.sep)
   }
   // Show skills as topics:
+  else if cfg.display == "list" {
+    parbreak()
+    pad(left: 1em)[#skills]
+  }
   else {
-    skills
+    panic("Invalid skills value: " + skills)
   }
 }
 
@@ -370,40 +417,46 @@
   course: none,
   place: none,
   time: none,
-  actual-course: false,
   skills: none,
-  skills-list: false,
-  skills-sep: "  " + sym.bullet + "  "
+  config: none,
 ) = xp(
   role: course,
   place: place,
   time: time,
-  actual-job: actual-course,
   skills: skills,
-  skills-list: skills-list,
-  skills-sep: skills-sep
+  config: config,
 )
 
 
 // Insert inline skills, like in `#xp`
 #let skills(
-  skills-list: false,
-  skills-sep: "  " + sym.bullet + "  ",
-  skills
-) = {
-  if skills-list == false or type(skills) == str {
+  config: none,
+  skill-list
+) = context {
+  let cfg = resume-config-state.final().skills
+  
+  if config != none {
+    for (key, value) in config.pairs() {
+      cfg.insert(key, value)
+    }
+  }
+
+  if cfg.display == "inline" or type(skills) == str {
     let items = ()
     
-    for child in skills.children {
+    for child in skill-list.children {
       if child.has("body") {
         items.push(child.body)
       }
     }
     
-    items.join(skills-sep)
+    items.join(cfg.sep)
+  }
+  else if cfg.display == "list" {
+    skill-list
   }
   else {
-    skills
+    panic("Invalid skills value: " + skills)
   }
 }
 

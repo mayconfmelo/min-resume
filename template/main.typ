@@ -1,7 +1,7 @@
 #import "@preview/min-resume:0.1.0": resume, letter, xp, skills, edu, linkedin-qrcode
 
 #show: resume.with(  
-	name: "John Worker",
+	name: "John B. Good Worker",
 	title: "Work Specialist",
 	photo: image("assets/photo.png"),
 	personal: "Relevant personal info",
@@ -9,12 +9,10 @@
 	address: "Address (no street nor house number)",
 	email: "worker@email.com",
 	phone: "+1 (000) 000-0000",
+	letter: "Amazing Enterprise LLC",
 )
 
-// Show/hide letter without go to the #letter command to change it:
-#let show-letter = "Amazing Enterprise LLC"
-
-= Objective  
+= Objective
 
 My objective is to be hired and my goal is to work hard and earn some money.
 
@@ -83,7 +81,7 @@ My objective is to be hired and my goal is to work hard and earn some money.
 
 #linkedin-qrcode("linkedin-username", 2cm)
 
-#letter(show-letter)[  
+#letter[  
   Dear Hiring Manager, or who it may concern,
   
   Plase hire me, please! I'm good at working, and learning, and I will earn a lot
@@ -91,5 +89,5 @@ My objective is to be hired and my goal is to work hard and earn some money.
   myself too.
   
   Best Regards,\  
-  Your name.  
+  John B. Good Worker.  
 ] 
