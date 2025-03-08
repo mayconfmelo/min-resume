@@ -12,9 +12,11 @@
 	letter: "Amazing Enterprise LLC",
 )
 
+
 = Objective
 
 My objective is to be hired and my goal is to work hard and earn some money.
+
 
 = Professional Experience
 
@@ -41,6 +43,7 @@ My objective is to be hired and my goal is to work hard and earn some money.
 	]
 )  
 
+
 = Education
 
 #edu(
@@ -55,11 +58,13 @@ My objective is to be hired and my goal is to work hard and earn some money.
   ]
 )
 
+
 = Qualification
 
 - A Really Usefull Course. Educational Institution. Year or Validity.  
 - A Very Professional Qualification. Educational Institution. Year or Validity.  
 - A Less Usefull Certification. Educational Institution. Year or Validity.  
+
 
 = Skills  
 
@@ -71,6 +76,7 @@ My objective is to be hired and my goal is to work hard and earn some money.
   - Fast coffee and bathroom breaks
 ]
 
+
 = Additional Information  
 
 - Available to work 24/7
@@ -79,7 +85,9 @@ My objective is to be hired and my goal is to work hard and earn some money.
 - Did some extra work
 - Awarded as _Best Employee Ever 2025_
 
+
 #linkedin-qrcode("linkedin-username", 2cm)
+
 
 #letter[  
   Dear Hiring Manager, or who it may concern,
