@@ -27,7 +27,7 @@ My objective is to be hired and my goal is to work hard and earn some money.
 	skills: [
 	  - Applied the things I learned
 	  - Did more stuff
-	  - Acomplished so much more goals
+	  - Accomplished so much more goals
 	  - Learned even more things
 	],
 )  
@@ -39,7 +39,7 @@ My objective is to be hired and my goal is to work hard and earn some money.
 	skills: [
 	  - Did some stuff
 	  - Learned some things
-	  - Accomplised some goals
+	  - Accomplished some goals
 	]
 )  
 
@@ -61,9 +61,9 @@ My objective is to be hired and my goal is to work hard and earn some money.
 
 = Qualification
 
-- A Really Usefull Course. Educational Institution. Year or Validity.  
+- A Really Useful Course. Educational Institution. Year or Validity.  
 - A Very Professional Qualification. Educational Institution. Year or Validity.  
-- A Less Usefull Certification. Educational Institution. Year or Validity.  
+- A Less Useful Certification. Educational Institution. Year or Validity.  
 
 
 = Skills  
@@ -92,7 +92,7 @@ My objective is to be hired and my goal is to work hard and earn some money.
 #letter[  
   Dear Hiring Manager, or who it may concern,
   
-  Plase hire me, please! I'm good at working, and learning, and I will earn a lot
+  Please hire me, please! I'm good at working, and learning, and I will earn a lot
   of money to your company. And would like pretty much to earn some money for
   myself too.
   

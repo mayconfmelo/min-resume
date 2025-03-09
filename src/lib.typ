@@ -78,7 +78,7 @@
   resume-title-state.update(title)
   resume-lang-data-state.update(lang-data)
   
-  // Tranform (yyyy, mm, dd) date into datetime:
+  // Transform (yyyy, mm, dd) date into datetime:
   if type(date) == array {
     date = datetime(
       year: int(date.at(0)),
@@ -99,7 +99,7 @@
     paper: paper,
     margin: margin,
     header: context if locate(here()).page() > 1 {
-      // Name and title in header after 1th page
+      // Name and title in header after 1st page
       align(right)[#name #linebreak() #title]
     }
   )
@@ -163,7 +163,7 @@
       }
       // Age calculation using birth date, if any:
       #if birth != none {
-        // Tranform (yyyy, mm, dd) into datetimes
+        // Transform (yyyy, mm, dd) into datetime
         if type(birth) == array {
           birth = datetime(
             year: birth.at(0),
@@ -182,14 +182,15 @@
           day: birth.day()
         )
         
-        // Age if yet to comemorate birthday this year:
+        // Age if yet to commemorate birthday this year:
         if birthday > datetime.today() {
           str(datetime.today().year() - birth.year() - 1)
         }
-        // Age if already comemorated birthday this year:
+        // Age if already commemorated birthday this year:
         else {
           str(datetime.today().year() - birth.year())
         }
+
         [ #linguify("years-old").]
       }
       #if personal != none or birth != none { linebreak() }
@@ -202,7 +203,7 @@
       #if phone != none {
         let phone-display = phone
         
-        // Removr country code from phone number
+        // Remove country code from phone number
         if show-country-code == false {
           let country-code = phone.find(regex("^\+(\d+)"))
           phone-display = phone.replace(country-code, "")
@@ -363,7 +364,7 @@
     }
     else {
       let n = str(end.month())
-      // Find month abbreviation name in lang 8data file:
+      // Find month abbreviation name in lang data file:
       context resume-lang-data-state.at(here())
         .at("lang")
         .at(text.lang)

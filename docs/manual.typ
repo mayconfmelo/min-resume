@@ -31,15 +31,15 @@
 = Description
 
 Generate a modern and direct to the point résumé, fit for today's Human Resources
-demands of assertiveness. There is no colorfull designs, figures, creative fonts,
+demands of assertiveness. There is no colorful designs, figures, creative fonts,
 nor anything that diverts attention when reading the document: is just plain old
 black sans-serif text in white paper. In fact, if one sees only the resulting
 résumé, may say it was written in Word --- but it was written with all of
 Typst's benefits and conveniences.
 
 The package was written by a Brazilian, so it uses some common Brazilian
-practices when writting a résumé --- but it is simple and minimalistic, even to
-Brazilian standards. Therefore, if some informations are missing or  unnecesary
+practices when writing a résumé --- but it is simple and minimalistic, even to
+Brazilian standards. Therefore, if some information are missing or  unnecessary
 to you, feel free to adapt it to your needs.
 
 This manual will be updated only when new versions break or modify something;
@@ -84,7 +84,7 @@ Those are the full list of options available and its default values:
 )
 ```
 
-Seems like an awfull lot to start with, but let's just break down all this to
+Seems like an awful lot to start with, but let's just break down all this to
 understand it better, shall we?
 
 #arg("name: <- string | content <required>")[
@@ -172,7 +172,7 @@ understand it better, shall we?
 ]
 
 #arg("justify: <- boolean")[
-  Defines if the text will have justified aligment.
+  Defines if the text will have justified alignment.
 ]
 
 #arg("line-space: <- length")[
@@ -189,7 +189,7 @@ understand it better, shall we?
 ]
 
 #arg("font: <- string | array")[
-  Defines the font families used for the text: a principal font and its falbacks.
+  Defines the font families used for the text: a principal font and its fallback.
 ]
 
 #arg("font-size: <- length")[
@@ -215,7 +215,7 @@ Adds a professional letter, in its own page. Receives configuration from
 ]
 
 #arg("letter.dept: <- auto | string | content")[
-  Received from `#resume`. The name used for the enteprise's department which
+  Received from `#resume`. The name used for the enterprise's department which
   will receive the letter. If set as `auto`, try to automatically retrieve
   the appropriate name for _Human Resources Department_ in `text.lang`, or
   fallback to English if not found.
@@ -239,26 +239,26 @@ Adds a professional letter, in its own page. Receives configuration from
 ```
 
 Adds a job experience entry. Receives configuration from `#resume(skills)` and
-some aeguments on its own.
+some arguments on its own.
 
 #arg("role: <- string | content <required>")[
   The occupation name or role played in this job.
 ]
 
 #arg("place: <- string | content <required>")[
-  The place of work or enteprise name.
+  The place of work or enterprise name.
 ]
 
 #arg("time: <- array <required>")[
-  The duration of this work expecience, in format \
+  The duration of this work experience, in format \
   `(YYYY-INITIAL, MM-INITIAL, YYYY-FINAL, MM-FINAL)`, where at least the
   `YYYY-INITIAL` must be provided, and all omitted values will fallback to the
   current year and month --- thus defining it a current job.
 ]
 
 #arg("skills: <- string | content")[
-  Skills learned and used, as well as goals acomplished. Can be a string or a
-  content with a unumbered list (topics) inside, shown as inline topics by
+  Skills learned and used, as well as goals accomplished. Can be a string or a
+  content with a unnumbered list (topics) inside, shown as inline topics by
   default.
 ]
 
@@ -271,7 +271,7 @@ some aeguments on its own.
   "skills.display: <- string"
 )[
   Received from `#resume(skills)`. Make the skills list an `"inline"` topic list
-  (saves space) or a proper `"list"`. Can be overriden using the
+  (saves space) or a proper `"list"`. Can be overridden using the
   `config: (display)` argument.
 ]
 
@@ -279,7 +279,7 @@ some aeguments on its own.
   "skills.sep: <- string | content"
 )[
   Received from `#resume(skills)`. Defines the separator for each inline topic
-  item (when `display: "inline"`). Can be overriden using the `config: (sep)`
+  item (when `display: "inline"`). Can be overridden using the `config: (sep)`
   argument.
 ]
 
@@ -315,8 +315,8 @@ from `#resume(skills)` and some arguments on its own.
 ]
 
 #arg("skills: <- string | content")[
-  Skills learned and used, as well as goals acomplished. Can be a string or a
-  content with a unumbered list (topics) inside, shown as inline topics by
+  Skills learned and used, as well as goals accomplished. Can be a string or a
+  content with a unnumbered list (topics) inside, shown as inline topics by
   default.
 ]
 
@@ -329,7 +329,7 @@ from `#resume(skills)` and some arguments on its own.
   "skills.display: <- string"
 )[
   Received from `#resume(skills)`. Make the skills list an `"inline"` topic list
-  (saves space) or a proper `"list"`. Can be overriden using the
+  (saves space) or a proper `"list"`. Can be overridden using the
   `config: (display)` argument.
 ]
 
@@ -337,7 +337,7 @@ from `#resume(skills)` and some arguments on its own.
   "skills.sep: <- string | content"
 )[
   Received from `#resume(skills)`. Defines the separator for each inline topic
-  item (when `display: "inline"`). Can be overriden using the `config: (sep)`
+  item (when `display: "inline"`). Can be overridden using the `config: (sep)`
   argument.
 ]
 
@@ -384,7 +384,7 @@ Allows to insert an arbitrary skill list. Receives configuration from
   "skills.display: <- string"
 )[
   Received from `#resume(skills)`. Make the skills list an `"inline"` topic list
-  (saves space) or a proper `"list"`. Can be overriden using the
+  (saves space) or a proper `"list"`. Can be overridden using the
   `config: (display)` argument.
 ]
 
@@ -392,13 +392,13 @@ Allows to insert an arbitrary skill list. Receives configuration from
   "skills.sep: <- string | content"
 )[
   Received from `#resume(skills)`. Defines the separator for each inline topic
-  item (when `display: "inline"`). Can be overriden using the `config: (sep)`
+  item (when `display: "inline"`). Can be overridden using the `config: (sep)`
   argument.
 ]
 
 #arg("skill-list: <- string | content")[
-  Skills learned and used, as well as goals acomplished. Can be a string or a
-  content with a unumbered list (topics) inside, shown as inline topics by
+  Skills learned and used, as well as goals accomplished. Can be a string or a
+  content with a unnumbered list (topics) inside, shown as inline topics by
   default.
 ]
 

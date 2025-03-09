@@ -25,15 +25,15 @@
 # Description
 
 Generate a modern and direct to the point résumé, fit for today's Human Resources
-demands of assertiveness. There is no colorfull designs, figures, creative fonts,
+demands of assertiveness. There is no colorful designs, figures, creative fonts,
 nor anything that diverts attention when reading the document: is just plain old
 black sans-serif text in white paper. In fact, if one sees only the resulting
-résumé, may say it was written in Word --- but it was written with all of
+résumé, may say it was written in Word — but it was written with all of
 Typst's benefits and conveniences.
 
 The package was written by a Brazilian, so it uses some common Brazilian
-practices when writting a résumé --- but it is simple and minimalistic, even to
-Brazilian standards. Therefore, if some informations are missing or  unnecesary
+practices when writing a résumé — but it is simple and minimalistic, even to
+Brazilian standards. Therefore, if some information are missing or  unnecessary
 to you, feel free to adapt it to your needs.
 
 

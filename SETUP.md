@@ -57,7 +57,7 @@ the link is removed; and so on.
 -------------------------
 
 
-## Other Usefull Commands
+## Other Useful Commands
 
 
 ### Debug package
