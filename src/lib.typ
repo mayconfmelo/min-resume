@@ -1,4 +1,5 @@
-// Résumé package
+// NAME: Minimal Résumé
+// REQ: linguify, icu-datetime, cades
 
 #import "@preview/linguify:0.4.0": linguify, set-database
 
