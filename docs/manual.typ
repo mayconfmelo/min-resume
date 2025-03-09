@@ -30,17 +30,17 @@
 
 = Description
 
-Generate modern and direct to the point résumé, fit for today's Human Resources
+Generate a modern and direct to the point résumé, fit for today's Human Resources
 demands of assertiveness. There is no colorfull designs, figures, creative fonts,
 nor anything that diverts attention when reading the document: is just plain old
 black sans-serif text in white paper. In fact, if one sees only the resulting
 résumé, may say it was written in Word --- but it was written with all of
 Typst's benefits and conveniences.
 
-As this package was written by a Brazilian, it was made using some of the
-Brazilian practices when writting a résumé --- but it is simple and minimalistic
-even to Brazilian standards. Therefore, if some information are missing or 
-unnecesary to you, feel free to adapt it to your needs.
+The package was written by a Brazilian, so it uses some common Brazilian
+practices when writting a résumé --- but it is simple and minimalistic, even to
+Brazilian standards. Therefore, if some informations are missing or  unnecesary
+to you, feel free to adapt it to your needs.
 
 This manual will be updated only when new versions break or modify something;
 otherwise, it will be valid to all newer versions starting by the one documented
