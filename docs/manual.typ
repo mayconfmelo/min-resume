@@ -1,4 +1,4 @@
-#import "@preview/min-manual:0.1.0": manual, arg
+#import "@preview/min-manual:0.1.0": manual, arg, univ
 
 #show: manual.with(
   title: "Minimal Résumé",
@@ -263,7 +263,7 @@ some arguments on its own.
 ]
 
 #arg("config: <- dictionary | none")[
-  Locally override any global configurations received by `#resume(skills)`.
+  Locally override any global configurations received from `#resume(skills)`.
   Applicable to the current `#xp` only.
 ]
 
@@ -321,7 +321,7 @@ from `#resume(skills)` and some arguments on its own.
 ]
 
 #arg("config: <- dictionary | none")[
-  Locally override any global configurations received by `#resume(skills)`.
+  Locally override any global configurations received from `#resume(skills)`.
   Applicable to the current `#xp` only.
 ]
 
@@ -376,21 +376,17 @@ Allows to insert an arbitrary skill list. Receives configuration from
 `#resume(skills)` and some arguments on its own.
 
 #arg("config: <- dictionary | none")[
-  Locally override any global configurations received by `#resume(skills)`.
+  Locally override any global configurations received from `#resume(skills)`.
   Applicable to the current `#skills` only.
 ]
 
-#arg(
-  "skills.display: <- string"
-)[
+#arg("skills.display: <- string")[
   Received from `#resume(skills)`. Make the skills list an `"inline"` topic list
   (saves space) or a proper `"list"`. Can be overridden using the
   `config: (display)` argument.
 ]
 
-#arg(
-  "skills.sep: <- string | content"
-)[
+#arg("skills.sep: <- string | content")[
   Received from `#resume(skills)`. Defines the separator for each inline topic
   item (when `display: "inline"`). Can be overridden using the `config: (sep)`
   argument.
@@ -401,6 +397,18 @@ Allows to insert an arbitrary skill list. Receives configuration from
   content with a unnumbered list (topics) inside, shown as inline topics by
   default.
 ]
+
+
+= Translation
+
+The _min-resume_ do its best to generate a résumé in your native language, as
+determined by `text.lang`, but that is not always possible. It uses
+#univ("linguify") to translate some pre-generated expressions and
+#univ("icu-datetime") to manage datetime. Currently, it offers support for
+English and Portuguese, and some other languages through IA
+translations. If your language is not supported, or was wrongly translated by
+the IA, consider contributing to this project by helping translate the
+`src/assets/lang.toml` file.
 
 
 = Copyright
