@@ -159,8 +159,8 @@ understand it better, shall we?
   (display: MODE, sep: SEPARATOR)
   ```
   
-  If the value is `STRING`, passes `(display: STRING)`, where the string must be
-  whether `"inline"` or `"list"`.
+  If the value is `STRING`, passes `(display: STRING)`; the `display` value must
+  be `"inline"` or `"list"`.
 ]
 
 #arg("paper: <- string")[
