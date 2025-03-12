@@ -346,8 +346,7 @@ from `#resume(skills)` and some arguments on its own.
 
 ```typ
 #linkedin-qrcode(
-  user,
-  size
+  user
 )
 ```
 
@@ -355,11 +354,7 @@ Generates a Linkedin profile QR code.
 
 #arg("user <- string")[
   The Linkedin username, not the URL. Can be obtained from the profile URL, in
-  format `https://www.linkedin.com/in/USERNAME`.
-]
-
-#arg("size <- length")[
-  The size of the QR code created.
+  format `https://www.linkedin.com/in/USER`.
 ]
 
 
