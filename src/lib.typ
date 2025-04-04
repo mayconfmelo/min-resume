@@ -1,5 +1,6 @@
 // NAME: Minimal Résumé
 // REQ: linguify, icu-datetime, tiaoma
+// TODO: refactor config system
 
 #import "@preview/linguify:0.4.2": linguify, set-database
 
@@ -19,19 +20,13 @@
   phone: none,
   date: datetime.today(),
   show-country-code: false,
-  letter: (
-    enterprise: true,
-    dept: auto,
-  ),
-  skills: (
-    display: "inline",
-    sep: "  " + sym.bullet + "  ",
-  ),
+  letter: true,
+  skills: "inline",
   paper: "a4",
   lang: "en",
   lang-data: toml("assets/lang.toml"),
   justify: true,
-  line-space: 0.65em,
+  line-space: 0.6em,
   par-margin: 1.2em,
   margin: 0.75in,
   font: "Arial",
@@ -49,28 +44,44 @@
     }
   }
   
-  if type(letter) != dictionary {
-    letter = (
-      enterprise: letter,
-      dept: auto
-    )
-  }
-  if type(skills) != dictionary {
-    if skills == "inline" or skills == "list" {
-      skills = (
-        display: skills,
-        sep: "  " + sym.bullet + "  ",
-      )
-    }
-    else {
-      panic("Invalid #resume(skills) value")
-    }
-  }
-  
   let config = (
     letter: letter,
     skills: skills,
   )
+  
+  if type(config.letter) == bool {
+    config.letter = (print: config.letter)
+  }
+  else if type(config.letter) != dictionary {
+    config.letter = (enterprise: config.letter)
+  }
+  
+  if type(config.skills) == str {
+    config.skills = (display: config.skills)
+  }
+  else if type(config.skills) != dictionary {
+    config.skills = (:)
+  }
+  
+  // if type(letter) != dictionary {
+  //   letter = (
+  //     enterprise: letter,
+  //     dept: auto
+  //   )
+  // }
+  
+  // if type(skills) != dictionary {
+  //   if skills == "inline" or skills == "list" {
+  //     skills = (
+  //       display: skills,
+  //       sep: "  " + sym.bullet + "  ",
+  //     )
+  //   }
+  //   else {
+  //     panic("Invalid #resume(skills) value")
+  //   }
+  // }
+  
   
   // State updates:
   resume-config-state.update(config)
@@ -155,7 +166,7 @@
         personal
         
         if birth != none {
-          ", "
+          ","
         }
         else {
           "."
@@ -218,6 +229,7 @@
     ]
   ]
   
+  // Heading formatting for résumé body
   show heading: set block(above: par-margin, below: par-margin)
   show heading: it => upper(it)
   
@@ -225,13 +237,44 @@
 }
 
 
+// Set global configurations (contextual)
+#let set-config(
+  ..cfg
+) = context {
+  // Ignores positional arguments
+  let cfg = cfg.named()
+  
+  // Set new cfg, if any
+  if cfg.len() > 0 {
+    // Copies the config state
+    let config = resume-config-state.get()
+    
+    // Insert cfg into copied config state
+    for (key, value) in cfg.pairs() {
+      if type(value) == dictionary {
+        for val in value.pairs() {
+          config.at(key).insert(..val)
+        }
+      }
+      else {
+        config.insert(key, value)
+      }
+    }
+    
+    [#config]
+    // Substitute config state to tue locally modified state
+    //resume-config-state.update(config)
+  }
+}
+
+
 // Generate a professional letter.
 #let letter(
   body
 ) = context {
-  let cfg = resume-config-state.final().letter
+  let cfg = resume-config-state.get().letter
 
-  if cfg.enterprise != false {
+  if cfg.at("print", default: true) == true {
     import "@preview/icu-datetime:0.1.2": fmt-date
     
     // Remove résumé header:
@@ -241,15 +284,13 @@
     
     // Letter receiver, if any:
     box(width: 1fr)[
-      #if type(cfg.enterprise) == str or type(cfg.enterprise) == content {
+      #if type(cfg.at("enterprise", default: none)) != none {
         cfg.enterprise
         linebreak()
-        if cfg.dept == auto {
+        if cfg.at("dept", default: auto) == auto {
           cfg.dept = linguify("hr-dept")
         }
         cfg.dept
-      } else if type(cfg.enterprise) != bool {
-        panic("Invalid #resume(letter) value")
       }
     ]
     // Letter sender:
@@ -286,22 +327,18 @@
   place: none,
   time: none,
   skills: none,
-  config: none,
 ) = context {
-  let cfg = resume-config-state.final().skills
-  
-  if config != none {
-    for (key, value) in config.pairs() {
-      cfg.insert(key, value)
-    }
-  }
+  let cfg = resume-config-state.get().skills
   
   // Job role
-  strong(role)
+  // TODOC: *enterprise*, where
+  let place = place.split(",")
+  place.at(0) = strong(place.at(0))
+  place.join(",")
   linebreak()
   
   // Place of work (enterprise)
-  place + "  " + sym.ast.op + "  "
+  emph(role) + ", "// + sym.ast.op + "  "
   
   let time = time
   let year = datetime.today().year()
@@ -342,6 +379,13 @@
       day: 2
     )
     
+    if current-job == true {
+      linguify("since") + " "
+    }
+    else {
+      linguify("from") + " "
+    }
+    
     let n = str(start.month())
     // Find month abbreviation name in lang data file:
     context resume-lang-data-state.at(here())
@@ -350,13 +394,13 @@
       .at("month-abbrev")
       .at(n)
     //start.display("[month repr:short]")
-    "/" + str(start.year()) + sym.dash.en
+    "/" + str(start.year())
     
     // If this is the current job:
-    if current-job == true  or end >= datetime.today() {
-      linguify("now")
-    }
-    else {
+    if current-job == false {
+      " "
+      linguify("to") + " "
+      
       let n = str(end.month())
       // Find month abbreviation name in lang data file:
       context resume-lang-data-state.at(here())
@@ -365,49 +409,52 @@
         .at("month-abbrev")
         .at(n)
       //end.display("[month repr:short]")
-      "/" + str(end.year()) + " ("
+      "/" + str(end.year())
       
+      // Calculate time between start-end
+      if cfg.at("time-calc", default: true) == true {
       
-      // Number of days in this job:
-      let diff = end - start
-      // Number of years in this job:
-      let years = calc.div-euclid(diff.days(), 365)
-      // Number of months in this job:
-      let months = calc.div-euclid(
-        calc.rem(diff.days(), 365),
-        30
-      )
-      
-      // Show the years in this job
-      if years > 0 {
-        if years == 1 {
-          [1 #linguify("year")]
-        }
-        else {
-          [#years #linguify("years")]
-        }
-      }
-      // Show the months in this job
-      if months > 0  {
+        // Number of days in this job:
+        let diff = end - start
+        // Number of years in this job:
+        let years = calc.div-euclid(diff.days(), 365)
+        // Number of months in this job:
+        let months = calc.div-euclid(
+          calc.rem(diff.days(), 365),
+          30
+        )
+        
+        [ (]
+        // Show the years in this job
         if years > 0 {
-          [ #linguify("and") ]
+          if years == 1 {
+            [1 #linguify("year")]
+          }
+          else {
+            [#years #linguify("years")]
+          }
         }
-        if months == 1 {
-          [1 #linguify("month")]
+        // Show the months in this job
+        if months > 0  {
+          if years > 0 {
+            [ #linguify("and") ]
+          }
+          if months == 1 {
+            [1 #linguify("month")]
+          }
+          else {
+            [#months #linguify("months")]
+          }
         }
-        else {
-          [#months #linguify("months")]
-        }
+        [)]
       }
-      [)]
     }
   }
-  "."
   
   set text(size: 1em - 1pt)
   
   // Show skills inline:
-  if cfg.display == "inline" {
+  if cfg.at("display", default: "inline") == "inline" {
     let items = ()
     
     if type(skills) == content and skills.at("children", default: none) != none {
@@ -418,7 +465,7 @@
       }
       
       linebreak()
-      items.join(cfg.sep)
+      items.join(cfg.at("sep", default:  "  " + sym.bullet + "  "))
     }
     else {
       linebreak()
@@ -426,7 +473,7 @@
     }
   }
   // Show skills as topics:
-  else if cfg.display == "list" {
+  else if cfg.at("display", default: "inline") == "list" {
     par(
       spacing: 0.65em,
       pad(left: 1em)[#skills]
@@ -449,25 +496,17 @@
   role: course,
   place: place,
   time: time,
-  skills: skills,
-  config: config,
+  skills: skills
 )
 
 
 // Insert inline skills, like in `#xp`
 #let skills(
-  config: none,
   skill-list
 ) = context {
-  let cfg = resume-config-state.final().skills
-  
-  if config != none {
-    for (key, value) in config.pairs() {
-      cfg.insert(key, value)
-    }
-  }
+  let cfg = resume-config-state.get().skills
 
-  if cfg.display == "inline" or type(skills) == str {
+  if cfg.at("display", default: "inline") == "inline" {
     let items = ()
     
     for child in skill-list.children {
@@ -476,9 +515,9 @@
       }
     }
     
-    items.join(cfg.sep)
+    items.join(cfg.at("sep", default:  "  " + sym.bullet + "  "))
   }
-  else if cfg.display == "list" {
+  else if cfg.at("display", default: "inline") == "list" {
     skill-list
   }
   else {
@@ -509,8 +548,8 @@
       // Insert Linkedin logo above QR code:
       #place(center + horizon,
         block(
-          height: 1cm,
-          width: 1cm,
+          height: 0.7cm,
+          width: 0.7cm,
           image("assets/linkedin.png")  
         )
       )
