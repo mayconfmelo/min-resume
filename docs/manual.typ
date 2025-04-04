@@ -64,14 +64,8 @@ Those are the full list of options available and its default values:
   phone: none,
   date: datetime.today(),
   show-country-code: false,
-  letter: (
-    enterprise: none,
-    dept: auto,
-  ),
-  skills: (
-    display: "inline",
-    sep: "  " + sym.bullet + "  ",
-  ),
+  letter: true,
+  skills: "inline",
   paper: "a4",
   lang: "en",
   lang-data: toml("assets/lang.toml"),
@@ -142,25 +136,45 @@ understand it better, shall we?
 ]
 
 #arg("letter: <- dictionary | string | boolean")[
-  Global letter configuration; can take a dictionary that must contain:
+  Global letter configuration; can take a dictionary that can contain one or
+  more of:
   
-  ```typ
-  (enterprise: ENTERPRISE, dept: DEPARTMENT)
-  ```
+  #arg("print: <- boolean")[
+    Turns letter printing one or off .
+  ]
   
-  If the value is `STRING`, passes `(enterprise: STRING)`; and if the value is a
-  boolean, just hide or show the letter using the default configurations.
+  #arg("enterprise: <- content | string | none")[
+    The name of the letter receiver --- an enterprise. If
+    the résumé is created to no enterprise in particular, just set it to `none` to
+    generate a letter without receiver.
+  ]
+  
+  #arg("dept: <- content | string")[
+    The name used for the enterprise's department which
+    will receive the letter. If set as `auto`, try to automatically retrieve
+    the appropriate name for _Human Resources Department_ in `text.lang`, or
+    fallback to English if not found.
+  ]
+  
+  If the value is a `STRING`, passes `(enterprise: STRING)`; and if the value is
+  a boolean, passes `(enterprise: STRING)`.
 ]
 
 #arg("skills: <- dictionary | string")[
- Global skills configuration; can take a dictionary that must contain:
+ Global skills configuration; can take a dictionary that can contain one or
+  more of:
   
-  ```typ
-  (display: MODE, sep: SEPARATOR)
-  ```
+  #arg("display: <- string")[
+    Display the skills list as an `"inline"` topic list (saves space) or as a
+    proper `"list"`.
+  ]
   
-  If the value is `STRING`, passes `(display: STRING)`; the `display` value must
-  be `"inline"` or `"list"`.
+  #arg("sep: <- content | string")[
+    Defines the visual separator for each inline topic item when
+    `skills.display: "inline"`.
+  ]
+  
+  If the value is `STRING`, passes `(display: STRING)`.
 ]
 
 #arg("paper: <- string")[
@@ -208,14 +222,18 @@ understand it better, shall we?
 Adds a professional letter, in its own page. Receives configuration from
 `#resume(letter)` and a letter `body` content.
 
-#arg("letter.enterprise <- string | boolean")[
-  Received from `#resume`. The name of the letter receiver --- an enterprise. If
-  the résumé is created to no enterprise in particular, just set it to `true` to
-  generate a letter without receiver; `false` hides the letter.
+#arg("letter.print <- boolean")[
+  Received from `#resume(skills)`. Enables the letter printing or hides it.
+]
+
+#arg("letter.enterprise <- content | string | none")[
+  Received from `#resume(skills)`. The name of the letter receiver --- an enterprise. If
+  the résumé is created to no enterprise in particular, just set it to `none` to
+  generate a letter without receiver.
 ]
 
 #arg("letter.dept: <- auto | string | content")[
-  Received from `#resume`. The name used for the enterprise's department which
+  Received from `#resume(skills)`. The name used for the enterprise's department which
   will receive the letter. If set as `auto`, try to automatically retrieve
   the appropriate name for _Human Resources Department_ in `text.lang`, or
   fallback to English if not found.
@@ -262,25 +280,14 @@ some arguments on its own.
   default.
 ]
 
-#arg("config: <- dictionary | none")[
-  Locally override any global configurations received from `#resume(skills)`.
-  Applicable to the current `#xp` only.
+#arg("skills.display: <- string")[
+  Received from `#resume(skills)`. Display the skills list as an `"inline"` topic
+  list (saves space) or as a proper `"list"`.
 ]
 
-#arg(
-  "skills.display: <- string"
-)[
-  Received from `#resume(skills)`. Make the skills list an `"inline"` topic list
-  (saves space) or a proper `"list"`. Can be overridden using the
-  `config: (display)` argument.
-]
-
-#arg(
-  "skills.sep: <- string | content"
-)[
+#arg("skills.sep: <- string | content")[
   Received from `#resume(skills)`. Defines the separator for each inline topic
-  item (when `display: "inline"`). Can be overridden using the `config: (sep)`
-  argument.
+  item when `skills.display: "inline"`.
 ]
 
 
@@ -320,25 +327,14 @@ from `#resume(skills)` and some arguments on its own.
   default.
 ]
 
-#arg("config: <- dictionary | none")[
-  Locally override any global configurations received from `#resume(skills)`.
-  Applicable to the current `#xp` only.
+#arg("skills.display: <- string")[
+  Received from `#resume(skills)`. Display the skills list as an `"inline"` topic
+  list (saves space) or as a proper `"list"`.
 ]
 
-#arg(
-  "skills.display: <- string"
-)[
-  Received from `#resume(skills)`. Make the skills list an `"inline"` topic list
-  (saves space) or a proper `"list"`. Can be overridden using the
-  `config: (display)` argument.
-]
-
-#arg(
-  "skills.sep: <- string | content"
-)[
+#arg("skills.sep: <- string | content")[
   Received from `#resume(skills)`. Defines the separator for each inline topic
-  item (when `display: "inline"`). Can be overridden using the `config: (sep)`
-  argument.
+  item when `skills.display: "inline"`.
 ]
 
 
@@ -370,21 +366,14 @@ Generates a Linkedin profile QR code.
 Allows to insert an arbitrary skill list. Receives configuration from
 `#resume(skills)` and some arguments on its own.
 
-#arg("config: <- dictionary | none")[
-  Locally override any global configurations received from `#resume(skills)`.
-  Applicable to the current `#skills` only.
-]
-
 #arg("skills.display: <- string")[
-  Received from `#resume(skills)`. Make the skills list an `"inline"` topic list
-  (saves space) or a proper `"list"`. Can be overridden using the
-  `config: (display)` argument.
+  Received from `#resume(skills)`. Display the skills list as an `"inline"` topic
+  list (saves space) or as a proper `"list"`.
 ]
 
 #arg("skills.sep: <- string | content")[
   Received from `#resume(skills)`. Defines the separator for each inline topic
-  item (when `display: "inline"`). Can be overridden using the `config: (sep)`
-  argument.
+  item when `skills.display: "inline"`.
 ]
 
 #arg("skill-list: <- string | content")[
