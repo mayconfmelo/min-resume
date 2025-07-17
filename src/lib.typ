@@ -1,6 +1,7 @@
 // NAME: Minimal Résumé
 // REQ: linguify, icu-datetime, tiaoma
 // TODO: refactor config system
+// TODO: Implement web résumé (HTML) when stable
 
 #import "@preview/linguify:0.4.2": linguify, set-database
 
@@ -44,6 +45,7 @@
     }
   }
   
+  // Temporary config data
   let config = (
     letter: letter,
     skills: skills,
@@ -62,27 +64,7 @@
   else if type(config.skills) != dictionary {
     config.skills = (:)
   }
-  
-  // if type(letter) != dictionary {
-  //   letter = (
-  //     enterprise: letter,
-  //     dept: auto
-  //   )
-  // }
-  
-  // if type(skills) != dictionary {
-  //   if skills == "inline" or skills == "list" {
-  //     skills = (
-  //       display: skills,
-  //       sep: "  " + sym.bullet + "  ",
-  //     )
-  //   }
-  //   else {
-  //     panic("Invalid #resume(skills) value")
-  //   }
-  // }
-  
-  
+
   // State updates:
   resume-config-state.update(config)
   resume-name-state.update(name)
@@ -238,6 +220,7 @@
 
 
 // Set global configurations (contextual)
+// TODOC: set-config()
 #let set-config(
   ..cfg
 ) = context {
