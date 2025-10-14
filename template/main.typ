@@ -60,8 +60,8 @@ To be hired and work hard to (hopefully) earn a lot of money.
 
 = Qualification
 
-- A Really Useful Course. Educational Institution. Year or Validity.  
-- A Very Professional Qualification. Educational Institution. Year or Validity.  
+- #underline[A Really Useful Course]. Educational Institution. Year or Validity.  
+- #underline[A Very Professional Qualification]. Educational Institution. Year or Validity.  
 - A Less Useful Certification. Educational Institution. Year or Validity.  
 
 
