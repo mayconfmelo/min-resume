@@ -1,52 +1,119 @@
 root := justfile_directory()
+name := `grep '^name' typst.toml | cut -d'"' -f2`
+version := `grep '^version' typst.toml | cut -d'"' -f2`
+example := "template/main.typ"
+doc := "manual.typ"
 
 [private]
 default:
 	@just --list --unsorted
 
-# Install package.
+# install package.
 install target="preview":
   bash scripts/package.sh install "{{target}}" "{{root}}"
   
-# Remove package.
+# remove package.
 remove target="preview":
   bash scripts/package.sh remove "{{target}}" "{{root}}"
   
-# Install package in both "local" and "preview" namespaces.
-install-all:
-  bash scripts/package.sh install "local" "{{root}}"
-  bash scripts/package.sh install "preview" "{{root}}"
+# run package tests.
+test which="":
+  tt run {{which}}
+  
+# compile the example file.
+example:
+  rm -r dev/example/ 2>/dev/null || true
+  mkdir -p dev/example/
+  typst compile {{example}} dev/example/doc.pdf
+  typst compile {{example}} dev/example/page-{0p}.png
 
-# Generate documentation PDFs in dev/
-pdf:
-  mkdir "dev" 2>/dev/null || true
-  bash scripts/package.sh check "" "{{root}}"
-  typst c "docs/manual.typ" "dev/manual.pdf"
-  typst c "template/main.typ" "dev/example.pdf"
+# compile the manual.
+doc:
+  rm -r dev/manual/ 2>/dev/null || true
+  mkdir -p dev/manual/
+  typst compile {{doc}} dev/manual/doc.pdf
+  typst compile {{doc}} dev/manual/page-{0p}.png
 
-# Generate documentation as PNGs in dev/png/
-png:
-  rm -r "dev/png" 2>/dev/null || true
-  mkdir -p "dev/png" 2>/dev/null || true
-  bash scripts/package.sh check "" "{{root}}"
-  typst c "docs/manual.typ" "dev/png/manual-{0p}.png"
-  typst c "template/main.typ" "dev/png/example-{0p}.png"
-
-# Toggle symlink this project to "local" namespace under 0.0.0 version.
-dev-link:
+# remove all dev files.
+clean:
+  rm -r dev/manual/  2>/dev/null || true
+  rm -r dev/example/ 2>/dev/null || true
+  rm -r dev/pkg/     2>/dev/null || true
+  rm -r dev/{{name}} 2>/dev/null || true
+  tt util clean
+  
+# enables @local/0.0.0.
+symlink:
   bash scripts/dev-link.sh "{{root}}"
 
-# Release a new package version.
-version v:
-  bash scripts/version.sh "{{v}}" "{{root}}"
+# run spell check.
+spell correct="no":
+  #!/usr/bin/env bash
+  arg=""
+  if [[ {{correct}} != "no" ]]; then
+    arg="--interactive 3 --write-changes"
+  fi
+  codespell $arg \
+    --skip "*.pdf,./dev/*,.git/*,./docs/assets/manual-pt.typ,./template/*,./src/assets/lang.yaml" \
+    --ignore-words-list "Heros"
 
-# Init Typst template project in dev/
-init target="preview":
-  bash scripts/init.sh "{{target}}" "{{root}}"
-  
+# init template in dev/
+init:
+  typst init '@preview/{{name}}:{{version}}' dev/{{name}}
+
+
+# useful dev commands.
 [private]
-all:
-  @just install-all
-  @just init
-  @just install "pkg"
-  @just pdf
+dev:
+  @just test
+  bash scripts/dev-link.sh "{{root}}" false
+  typst watch {{example}} dev/example/page-{0p}.png
+  
+# release a new package version.
+[private]
+release:
+  git tag
+  bash scripts/version.sh "{{version}}" "{{root}}"
+  bash scripts/package.sh "check" "preview" "{{root}}"
+  typst compile {{example}} docs/example.pdf
+  typst compile {{doc}} docs/manual.pdf
+  git add .
+  git commit -m "VERSION: {{version}} released" || true
+  git push origin main --force
+  git tag "{{version}}"
+  git push origin "{{version}}"
+  
+# install and build it (used in CI).
+[private]
+build:
+  @just install preview
+  @just example
+  
+# deploy to the Typst Universe repo in ../packages.
+[private]
+deploy:
+  #!/usr/bin/env bash
+  bash scripts/version.sh "{{version}}" "{{root}}"
+  
+  cd ../packages
+  git checkout -b main
+  just update
+  git checkout -b {{name}}
+  just delete {{name}} {{version}}
+  just bring {{name}}
+  git add . --sparse
+  git status --short
+  git commit -m "{{name}}:{{version}}"
+  git push origin {{name}}
+  git checkout main
+  git branch -D {{name}}
+  
+# Update log files fir just recipes in dev/
+[private]
+log recipe:
+  #!/usr/bin/env bash
+  mkdir -p dev/
+  date +"time: %Y-%m-%d (%H:%M)" >> dev/{{recipe}}.log
+  just {{recipe}} 2> >(tee -a dev/{{recipe}}.log)
+  echo "" >> dev/{{recipe}}.log
+  echo "" >> dev/{{recipe}}.log

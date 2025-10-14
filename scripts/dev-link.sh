@@ -11,40 +11,48 @@ else
   DATA_DIR="${APPDATA}"
 fi
 
-TARGET="local"
-VERSION="0.0.0"
-
-# Project root Directory
 PROJECT_ROOT="${1:-$PWD}"
-if [[ ! -d "${PROJECT_ROOT}" ]]; then
+DEL=${2-true}
+TARGET=${3-preview}
+NAME=`grep '^name' "${PROJECT_ROOT}/typst.toml" | cut -d'"' -f2`
+VERSION="0.0.0"
+DIR="${DATA_DIR}/typst/packages/${TARGET}/${NAME}"
+TYP_FILES=( `find . -type f -iname "*.typ"` )
+
+
+# Check project root
+if [[ -d "${PROJECT_ROOT}" ]]; then
+  cd "${PROJECT_ROOT}"
+else
   echo "Directory not found: \"${PROJECT_ROOT}\""
+  exit 1
 fi
 
-# Get package name from typst.toml
-NAME=$(
-  perl \
-    -ne "print \$1 if /^\s*name\s*=\s*[\"']?(.*?)[\"']?\s*$/" \
-    "${PROJECT_ROOT}/typst.toml"
-)
 
-# Set package directory
-LINK_DIR="${DATA_DIR}/typst/packages/${TARGET}/${NAME}"
-
-if [[ -d "${LINK_DIR}/${VERSION}" ]]; then
-  echo "Deleting symlink: \"${LINK_DIR}/${VERSION}\""
-  rm "${LINK_DIR}/${VERSION}" 2>/dev/null || true
-  # Remove dev linked version in "typst.toml":
-  perl -i -pe \
-    's/^(\s*version\s*=\s*).*?#(.*)/$1$2/' \
-    "${PROJECT_ROOT}/typst.toml"
-  echo "Symlink removal finished"
+if [[ -d "$DIR/$VERSION" ]]; then
+  # Disable removal
+  if [[ $DEL != true ]]; then
+    exit 0
+  fi
+  
+  echo "Deleting \"@$TARGET/$NAME:$VERSION\" symlink..."
+  rm "$DIR/$VERSION" 2>/dev/null || true
+  perl -i -pe 's/^(\s*version\s*=\s*).*?#(.*)/$1$2/' typst.toml
+  echo "Finished \"@$TARGET/$NAME:$VERSION\" removal."
+  
+  VERSION=`grep '^version' "$PROJECT_ROOT/typst.toml" | cut -d'"' -f2`
 else
-  echo "Creating symlink: \"${LINK_DIR}/${VERSION}\""
-  mkdir "${LINK_DIR}" 2>/dev/null || true
-  ln -s "${PROJECT_ROOT}" "${LINK_DIR}/${VERSION}"
-  # Comment original version and insert dev linked version in "typst.toml":
-  perl -i -pe \
-    's/^(\s*version\s*=\s*)(.*)/$1"0.0.0" #$2/' \
-    "${PROJECT_ROOT}/typst.toml"
+  echo "Creating \"@$TARGET/$NAME:$VERSION\" symlink..."
+  mkdir "$DIR" 2>/dev/null || true
+  ln -s "$PROJECT_ROOT" "$DIR/$VERSION"
+  perl -i -pe 's/^(\s*version\s*=\s*)(.*)/$1"0.0.0" #$2/' typst.toml
   echo "Symlink creation finished"
+fi
+
+
+if [[ ${TYP_FILES[@]} != 0 ]]; then
+  echo "Updating version number in Typst files..."
+  for file in ${TYP_FILES[@]}; do
+    sed -i "s/$NAME:[0-9.]\+/$NAME:$VERSION/" "$file"
+  done
 fi

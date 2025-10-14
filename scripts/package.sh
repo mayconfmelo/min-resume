@@ -11,14 +11,26 @@ else
   DATA_DIR="${APPDATA}"
 fi
 
-# Check invalid target package path;
-case "$2" in
-  "local"|"preview"|"pkg")
-    TARGET="$2"
-    ;;
-  "")
-    TARGET="local"
-    ;;
+ACTION="$1"
+TARGET="$2"
+PROJECT_ROOT="${3:-..}"
+NAME=`grep '^name' "${PROJECT_ROOT}/typst.toml" | cut -d'"' -f2`
+VERSION=`grep '^version' "${PROJECT_ROOT}/typst.toml" | cut -d'"' -f2`
+
+
+# Disable dev-link "0.0.0" version"
+if [[ "${VERSION}" == "0.0.0" ]]; then
+  echo "Development link activated. Removing it..."
+  bash "${PROJECT_ROOT}/scripts/dev-link.sh"
+  
+  VERSION=`grep '^version' "${PROJECT_ROOT}/typst.toml" | cut -d'"' -f2`
+fi
+
+
+# Target fallback and check
+case "$TARGET" in
+  "local"|"preview"|"pkg") ;;
+  "") TARGET="preview" ;;
   *)
     echo "Invalid target: \"$1\""
     echo "USAGE: $0 [ACTION] [TARGET] [PROJECT-ROOT]"
@@ -26,83 +38,43 @@ case "$2" in
     ;;
 esac
 
-# Project root Directory
-PROJECT_ROOT="${3:-..}"
-if [[ ! -d "${PROJECT_ROOT}" ]]; then
-  echo "Directory not found: \"${PROJECT_ROOT}\""
-fi
 
-# Get package name from typst.toml
-NAME=$(
-  perl \
-    -ne "print \$1 if /^\s*name\s*=\s*[\"']?(.*?)[\"']?\s*$/" \
-    "${PROJECT_ROOT}/typst.toml"
-)
-VERSION=$(
-  perl \
-    -ne "print \$1 if /^\s*version\s*=\s*[\"']?([^\"]*)[\"']?.*/g" \
-    "${PROJECT_ROOT}/typst.toml"
-)
-
-ACTION="$1"
-
-# Check if package is installed. If not, set to install it:
+# Action "check" for preview instalation
 if [[ "${ACTION}" == "check" ]]; then
-  INSTALLED=false
-  
-  # Check if package is installed in "local" namespace
-  if [[ -d "${DATA_DIR}/typst/packages/local/${NAME}" ]]; then
-    INSTALLED=true
-    echo "Package \"${NAME}\" installed in \"local\" namespace."
-  fi
-  
   # Check if package is installed in "preview" namespace
-  if [[ -d "${DATA_DIR}/typst/packages/preview/${NAME}" ]]; then
-    INSTALLED=true
-    echo "Package \"${NAME}\" installed in \"preview\" namespace."
-  else
-    INSTALLED=false
-  fi
-  
-  if [[ ${INSTALLED} == true ]]; then 
+  if [[ -d "${DATA_DIR}/typst/packages/${TARGET}/${NAME}" ]]; then
+    echo "Package \"@${TARGET}/${NAME}:${VERSION}\" already installed."
     exit 0
   else
-    echo "Package \"${NAME}\" not installed. Installing now..."
-    # Install package in both namespaces if not found in one of them
-    bash $0 install "preview" "${PROJECT_ROOT}"
-    bash $0 install "local" "${PROJECT_ROOT}"
+    bash $0 install "${TARGET}" "${PROJECT_ROOT}"
     exit $?
   fi
 fi
 
-# Check if version is set to "0.0.0" because of dev-link"
-if [[ "${VERSION}" == "0.0.0" ]]; then
-  echo "Development link activated. Aborting..."
-  echo "Run \"dev-link\" to deactivate it."
-  exit 1
+
+# Root directory check
+if [[ ! -d "${PROJECT_ROOT}" ]]; then
+  echo "Directory not found: \"${PROJECT_ROOT}\""
 fi
 
-# Set package directory
+
+# Instalation path
 LIB_DIR="${DATA_DIR}/typst/packages/${TARGET}/${NAME}"
+
 
 # Install or remove package:
 case "${ACTION}" in
   "install")
-    echo "Installing package to: \"${LIB_DIR}/${VERSION}\""
+    echo "Installing \"@${TARGET}/${NAME}:${VERSION}\" package..."
     mkdir -p "${LIB_DIR}" 2>/dev/null
     rm -r "${LIB_DIR}/${VERSION}" 2>/dev/null
     # Copy all package files to its path:
     cp -r "${PROJECT_ROOT}" "${LIB_DIR}/${VERSION}"
-    if [[ $? == 0 ]]; then
-      echo "Package files successfully copied."
-    else
-      echo "Could not copy package files. Aborting..."
-      exit $?
-    fi
+    [[ $? != 0 ]] && exit $?
     
-    # Find files and directories excluded from tje final package:
     EXCLUDES=()
     IFS=$'\n'
+    
     while read -r linha; do
         EXCLUDES+=("$linha")
     done < <(
@@ -116,44 +88,43 @@ case "${ACTION}" in
     
     # Remove files and directories excluded in typst.toml:
     if [[ ${#EXCLUDES[@]} -ne 0 ]]; then
-      echo "Removing excluded paths from final package:"
+      echo "Removing excluded paths:"
       cd "${LIB_DIR}/${VERSION}"
 
       for EXCLUDE in ${EXCLUDES[@]}; do
         if [[ -e "${EXCLUDE}" ]]; then
           rm -r "${EXCLUDE}"
-          echo "Removed: ${EXCLUDE}"
+          echo " - Removed: ${EXCLUDE}"
         else
-          echo "Does not exist: ${EXCLUDE}"
+          echo " - Does not exist: ${EXCLUDE}"
         fi
       done
     fi
-    echo "Package \"${NAME}\" installation in \"${TARGET}\" finished."
     
-    # Move installled package to project
+    # Move installed package to project
     if [[ "${TARGET}" == "pkg" ]]; then
-      echo "Moving package to: \"${PROJECT_ROOT}/dev/pkg\""
+      echo "Moving files to: \"dev/pkg\""
       rm -r  "${PROJECT_ROOT}/dev/pkg"
       mkdir -p "${PROJECT_ROOT}/dev/pkg"
       mv "${DATA_DIR}/typst/packages/pkg/" "${PROJECT_ROOT}/dev/"
       
       if [[ $? == 0 ]]; then
-        echo "Package moved successfully to \"dev/pkg\""
+        echo "Package available in \"dev/pkg\""
       else
-        echo "Could not move package. Aborting..."
+        echo "Could not move files. Aborting..."
         exit $?
       fi
     fi
     ;;
     
   "remove")
-    echo "Removing package in: \"${LIB_DIR}\""
+    echo "Removing \"@${TARGET}/${NAME}\" package (all versions)..."
     # Remove package directory:
     rm -r "${LIB_DIR}" 2>/dev/null
     if [[ $? == 0 ]]; then
-      echo "Package \"${NAME}\" removed from \"${TARGET}\"."
+      echo "Package \"@${TARGET}/${NAME}\" removed."
     else
-      echo "Package \"${NAME}\" not found in \"${TARGET}\""
+      echo "Package \"@${TARGET}/${NAME}\" not found"
     fi
     ;;
     
