@@ -24,6 +24,7 @@
   import "@preview/transl:0.1.1": transl
   
   let birth = birth
+  let photo = photo
   let font-size = default(
     when: text.size == 11pt,
     value: 12pt,
@@ -116,6 +117,7 @@
   // Personal info
   let personal
   
+  if photo != none {photo = block(photo, height: 4.8em, inset: 0pt, outset: 0pt)}
   if info != none {
     personal += info
     personal += if birth != none {", "} else {"."}
@@ -152,7 +154,7 @@
   
   grid(
     columns: (4.8em, 1fr),
-    block(photo, height: 4.8em, inset: 0pt, outset: 0pt),
+    photo,
     align(right, personal),
   )
   
