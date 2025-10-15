@@ -14,7 +14,7 @@
 
 = Objective
 
-To be hired and work hard to (hopefully) earn a lot of money.
+To be hired and work hard to (hopefully) earn some money.
 
 
 = Professional Experience
@@ -89,21 +89,28 @@ To be hired and work hard to (hopefully) earn a lot of money.
 
 
 #letter(to: "Amazing Enterprise LLC")[
-  Dear Hiring Manager, or who it may concern,
+  Dear Hiring Manager, or to whom it may concern,
+
+  Please hire me. I work. A lot. Some say too much, but I think they are the
+  ones who peripherally don’t like working... I mean, you can’t call yourself a hard
+  worker and refuse to work on Sundays if your boss asks you to work on Saturdays.
+  If they ask of you much, make sure you give them too much --- that’s my life
+  philosophy.
   
-  Please hire me. I work. A lot. Some say too much. I once stayed late just to
-  make sure the lights were turned off — then realized I was the one who turned
-  them off; that' the kind of dedication we're talking about.
+  I’m also very attentive to details: I once set an out-of-office reply saying I
+  would not be checking emails while on holiday. Then I spent most of the holiday
+  checking whether it was working properly. I like to ensure everything runs like
+  clockwork --- except for my sleep cycle, which is a long-lost battle, but
+  nothing two cups of coffee in the morning can’t fix.
   
-  I believe in giving 110%, though mathematically that’s questionable. I thrive
-  under pressure, survive on coffee, and occasionally remember to sleep. If you
-  need someone who will work weekends, holidays, and possibly in their dreams
-  — I am your person.
+  I thrive under pressure, survive on caffeine, and only need to rest
+  occasionally. If you need someone who will work weekends, holidays, and
+  possibly in their dreams --- I am your person.
   
-  I promise to bring unstoppable energy, questionable work-life balance, and a
-  genuine passion for making your company even greater. Please, let me prove
-  that exhaustion is just another word for “commitment.”
+  I promise to bring unstoppable energy, a questionable work-life balance, and a
+  genuine passion for making your company even greater and wealthier. Please,
+  let me prove that exhaustion is just another word for "commitment."
   
-  Eagerly (and already working on this application overtime),\
-  John B. Goode Workmann
+  Eagerly --- and already working on this application overtime ---,\
+  John B. Goode Workmann.
 ] 

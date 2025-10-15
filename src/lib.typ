@@ -247,9 +247,6 @@ for you, feel free to adapt it to your needs.
     if cfg.letter-show {
       import "@preview/datify:1.0.0": custom-date-format
       
-      set text(hyphenate: false)
-      set par(justify: false)
-      
       if stored.to == none {stored.to = transl("hr-dept") + "."}
       
       pagebreak()
