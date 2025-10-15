@@ -1,24 +1,54 @@
 // NAME: Minimal Résumé
 // TODO: Implement web résumé (HTML) when stable
 
+/**#v(1fr)#outline()#v(1.2fr)#pagebreak()
+= Description
+Generate a modern and straightforward résumé that meets today's Human Resources
+demands for assertiveness. There are no colorful designs, images, creative fonts,
+or anything that distracts from reading the document: it's just plain black
+sans-serif text on white paper. In fact, someone who sees only the resulting
+résumé might think it was written in Word — but it was actually created with all
+of Typst's benefits and conveniences.
+
+The package was written by a Brazilian, so it follows some common Brazilian
+practices for writing a résumé — but it remains simple and minimalist, even by
+Brazilian standards. Therefore, if some information is missing or unnecessary
+for you, feel free to adapt it to your needs.
+
+= Options
+:show.with resume:
+**/
 #let resume(
-  name: none,
-  title: none,
-  photo: none,
-  info: none,
-  birth: none,
-  address: none,
-  email: none,
-  phone: none,
-  data: (:),
-  cfg: (:),
-  translation: yaml("assets/lang.yaml"),
-  typst-defaults: false,
+  name: none, /// <- string | content <required>
+    /// Full name. |
+  title: none, /// <- string | content
+    /// Academic title or occupation. |
+  photo: none, /// <- image | content
+    /// Photo or other identification (like a `#linkedin` QR code). |
+  info: none, /// <- string | content
+    /// Basic personal information. |
+  birth: none, /// <-  array | dictionary
+    /// `(year, month, day)`\ Birthday date. |
+  address: none, /// <- string | content <required>
+    /// Public address (no street nor house number). |
+  email: none, /// <- string
+    /// Email address. |
+  phone: none, /// <- string
+    /// Phone number, started by `+` country code separated by space. |
+  data: (:), /// <- yaml | dictionary
+    /// Generate YAML-based document (see @data section). |
+  cfg: (:), /// <- dictionary
+    /// Custom settings (see @cfg section). |
+  translation: yaml("assets/lang.yaml"), /// <- yaml | toml | dictionary
+    /// Translation data (see `src/assets/lang.yaml` file). |
+  typst-defaults: false, /// <- boolean
+    /// Use Typst defaults instead of min-resume defaults. |
   body
 ) = context {
   assert.ne(name, none, message: "#resume(name) required")
   assert.ne(address, none, message: "#resume(address) required")
-  assert.eq(type(cfg), dictionary, message: "#resume(cfg) must be a dictionary")
+  assert.eq(type(cfg), dictionary, message: "#resume(cfg) must be dictionary")
+  assert.eq(type(data), dictionary, message: "#resume(data) must be dictionary")
   
   import "@preview/toolbox:0.1.0": storage, default, get, its
   import "@preview/transl:0.1.1": transl
@@ -31,12 +61,22 @@
     otherwise: text.size,
     typst-defaults
   )
+  
+  /**
+  == Custom Settings <cfg>
+  :arg cfg: "let"
+  **/
   let cfg = (
-    country-code: false,
-    letter-show: true,
-    lists: par,
-    entry-time-calc: true,
-    data-assets: (:)
+    country-code: false, /// <- boolean
+      /// Show the `+` country code in final result. |
+    letter-show: true, /// <- boolean
+      /// Show `#letter` content. |
+    lists: par, /// <- par | list | enum
+      /// Display `#list` content as inline, unnumbered, or numbered topics. |
+    entry-time-calc: true, /// <- boolean
+      /// Show period between dates of `#entry(time)` commands. |
+    data-assets: (:) /// <- dictionary
+      /// Expose assets to be used in YAML-based document generation. |
   ) + cfg
   
   storage.add("cfg", cfg, namespace: "min-resume")
@@ -199,7 +239,8 @@
   body
   
   storage.namespace("min-resume")
-
+  
+  // Generate content through #resume(data)
   context if not its.empty( storage.final("letter", (:)) ) {
     let stored = storage.final("letter", (:))
     
@@ -245,24 +286,30 @@
   }
 }
 
+/// = Commands
 
-// Generate a professional letter.
+/**
+== Letter
+:letter:
+**/
 #let letter(
-  to: none,
-  display: true,
+  to: none, /// <- string | content
+    /// Letter receiver.
   body
 ) = context {
   import "@preview/toolbox:0.1.0": storage
 
-  let data = (
-    body: body,
-    to: to,
-  )
+  let data = (to: to, body: body)
   
   storage.add("letter", data, append: true, namespace: "min-resume")
 }
 
-
+/**
+== Custom List
+:list:
+Generate custom lists of topics; by default, an inline bullet list (see 
+`cfg.lists` option in @cfg).
+**/
 #let list(body) = context {
   import "@preview/toolbox:0.1.0": storage
   import "origin.typ"
@@ -289,14 +336,23 @@
   }
 }
 
-
-// Insert a professional experience entry.
+/**
+== Data Entry
+:entry:
+Insert a professional experience or academic degree.
+**/
 #let entry(
-  title: none,
-  organization: none,
-  location: none,
-  time: (),
-  skills: none,
+  title: none, /// <- string | content
+    /// Occupation or course name. |
+  organization: none, /// <- string | content
+    /// Organization related to the entry (enterprise, university, etc.). |
+  location: none, /// <- string | context
+    /// Organization location. |
+  time: (), /// <- array
+    /** `(YYYY, DD, YYYY, DD)`\
+        Start and end of entry; ommit end date to insert a current one. |**/
+  skills: none, /// <- list | string
+    /// Related skills and topics (the same as `#list`).
 ) = context {
   assert.ne(title, none, message: "#entry(title) required")
   assert.ne(organization, none, message: "#entry(organization) required")
@@ -373,7 +429,13 @@
 }
 
 
-// Generate a Linkedin QR code:
+/**
+== Linkedin QR Code
+:linkedin:
+
+user <- string
+  _www.linkedin.com/in/#underline[user]_\ Linkedin username.
+**/
 #let linkedin(user) = {
   import "@preview/tiaoma:0.3.0": qrcode
   
