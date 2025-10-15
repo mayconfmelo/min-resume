@@ -39,7 +39,7 @@ case "$TARGET" in
 esac
 
 
-# Action "check" for preview instalation
+# Action "check" for preview installation
 if [[ "${ACTION}" == "check" ]]; then
   # Check if package is installed in "preview" namespace
   if [[ -d "${DATA_DIR}/typst/packages/${TARGET}/${NAME}" ]]; then
@@ -58,7 +58,7 @@ if [[ ! -d "${PROJECT_ROOT}" ]]; then
 fi
 
 
-# Instalation path
+# Installation path
 LIB_DIR="${DATA_DIR}/typst/packages/${TARGET}/${NAME}"
 
 

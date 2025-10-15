@@ -347,7 +347,7 @@ Insert a professional experience or academic degree.
     /// Organization location. |
   time: (), /// <- array
     /** `(YYYY, DD, YYYY, DD)`\
-        Start and end of entry; ommit end date to insert a current one. |**/
+        Start and end of entry; omit end date to insert a current one. |**/
   skills: none, /// <- list | string
     /// Related skills and topics (the same as `#list`).
 ) = context {
