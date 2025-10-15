@@ -35,7 +35,7 @@ for you, feel free to adapt it to your needs.
     /// Email address. |
   phone: none, /// <- string
     /// Phone number, started by `+` country code separated by space. |
-  data: (:), /// <- yaml | dictionary
+  data: (), /// <- yaml | dictionary
     /// Generate YAML-based document (see @data section). |
   cfg: (:), /// <- dictionary
     /// Custom settings (see @cfg section). |
@@ -48,7 +48,7 @@ for you, feel free to adapt it to your needs.
   assert.ne(name, none, message: "#resume(name) required")
   assert.ne(address, none, message: "#resume(address) required")
   assert.eq(type(cfg), dictionary, message: "#resume(cfg) must be dictionary")
-  assert.eq(type(data), dictionary, message: "#resume(data) must be dictionary")
+  assert.eq(type(data), array, message: "#resume(data) must be array")
   
   import "@preview/toolbox:0.1.0": storage, default, get, its
   import "@preview/transl:0.1.1": transl
@@ -198,10 +198,10 @@ for you, feel free to adapt it to your needs.
     align(right, personal),
   )
   
+  // #resume(data) content
   if data != (:) {
-    assert.eq(type(data), dictionary, message: "#resume(data) must be dictionary")
-    assert.eq(type(data.doc), array, message: "#resume(data.doc)")
-    
+    assert.eq(type(data), array, message: "#resume(data) must be array")
+
     import "lib.typ" as self
     
     let eval = eval.with(
@@ -209,7 +209,7 @@ for you, feel free to adapt it to your needs.
       mode: "markup"
     )
       
-    for elem in data.doc {
+    for elem in data {
       assert.eq(type(elem), dictionary, message: "#resume(data.doc.elem)")
       assert.eq(
         elem.len(), 1,
@@ -240,7 +240,7 @@ for you, feel free to adapt it to your needs.
   
   storage.namespace("min-resume")
   
-  // Generate content through #resume(data)
+  // Letter
   context if not its.empty( storage.final("letter", (:)) ) {
     let stored = storage.final("letter", (:))
     
