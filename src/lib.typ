@@ -227,7 +227,7 @@ for you, feel free to adapt it to your needs.
       if kind == "hide" {continue}
       
       if kind == "header" {heading(level: 1, data)}
-      else if kind == "text" {eval(data)}
+      else if kind == "code" {eval(data)}
       else if kind == "entry" {
         if data.at("skills", default: "") != "" and type(data.skills) == str {
           data.skills = eval(data.skills)

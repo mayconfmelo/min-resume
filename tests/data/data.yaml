@@ -1,5 +1,5 @@
 - header: Objective
-- text: To be hired and work hard to (hopefully) earn a lot of money.
+- code: To be hired and work hard to (hopefully) earn a lot of money.
 
 - header: Professional Experience
 - entry:
@@ -33,7 +33,7 @@
       - Wrote a thesis on interesting things
 
 - header: Qualification
-- text: |
+- code: |
     - #underline[A Really Useful Course]. Educational Institution. Valid until 2029.
     - #underline[A Very Professional Qualification]. Educational Institution, 2025.  
     - A Less Useful Certification. Educational Institution, 2025.  
@@ -47,7 +47,7 @@
     - Fast coffee and bathroom breaks
 
 - header: Additional Information
-- text: |
+- code: |
     - Available to work 24/7
     - Available to do some tiresome business travels
     - Know some extra things
