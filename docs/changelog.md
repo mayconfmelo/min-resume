@@ -44,4 +44,4 @@
 - Updated: `#resume(personal)` &larr; `#resume(info)`
 - Updated: `#skills` &larr; `#list`
 - Updated: `#xp`/`#edu` &larr; `#entry`
-- Updated: `#Linkedin-qrcode` &larr; `#Linkedin`
+- Updated: `#Linkedin-qrcode` &larr; `#linkedin`

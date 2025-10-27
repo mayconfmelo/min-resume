@@ -1,10 +1,10 @@
 [package]
 name = "min-resume"
-version = "0.1.0"
+version = "0.2.0"
+description = "Simple and professional résumé for professional people"
 entrypoint = "src/lib.typ"
 authors = ["Maycon F. Melo <@mayconfmelo>"]
 license = "MIT-0"
-description = "Simple and professional résumé for professional people"
 categories = [ "cv", "office" ]
 keywords = [
   "resume", "résumé", "curriculum", "curriculo", "currículo brasileiro"
@@ -18,8 +18,6 @@ exclude = [
   ".git",
   ".gitignore",
   "justfile",
-  "CHANGELOG.md",
-  "SETUP.md"
 ]
 
 [template]

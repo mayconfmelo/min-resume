@@ -1,4 +1,4 @@
-#import "@preview/min-resume:0.0.0": resume, entry, list, linkedin, letter
+#import "@preview/min-resume:0.1.1": resume, entry, list, linkedin, letter
 
 #show: resume.with( 
 	name: "John B. Goode Workmann",
