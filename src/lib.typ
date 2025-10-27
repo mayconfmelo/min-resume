@@ -61,6 +61,11 @@ for you, feel free to adapt it to your needs.
     otherwise: text.size,
     typst-defaults
   )
+  let font-title = default(
+    when: text.font == "libertinus serif",
+    value: (font: ("tex gyre adventor", "century gothic")),
+    typst-defaults
+  )
   
   /**
   == Custom Settings <cfg>
@@ -133,22 +138,19 @@ for you, feel free to adapt it to your needs.
   show quote: set pad(x: 1em)
   show heading: set text(
     size: font-size + 1pt,
-    ..default(
-      when: text.font == "libertinus serif",
-      value: (font: ("tex gyre adventor", "century gothic")),
-      typst-defaults
-    ),
+    ..font-title,
   )
   show heading: set block(
     above: par.spacing,
     below: par.spacing,
   )
+  show heading: it => upper(it)
   
   // Main header
   {
     set align(center)
     
-    text(name, size: 1.3em, weight: "bold")
+    text(upper(name), size: 1.2em, weight: "bold", ..font-title)
     linebreak()
     title
   }
@@ -210,7 +212,10 @@ for you, feel free to adapt it to your needs.
     )
       
     for elem in data {
-      assert.eq(type(elem), dictionary, message: "#resume(data.doc.elem)")
+      assert.eq(
+        type(elem), dictionary,
+        message: "All #resume(data.elem) must be dictionary"
+      )
       assert.eq(
         elem.len(), 1,
         message: "Element data." + elem.keys().at(0) + " has more than 1 key"
@@ -224,12 +229,12 @@ for you, feel free to adapt it to your needs.
       if kind == "header" {heading(level: 1, data)}
       else if kind == "text" {eval(data)}
       else if kind == "entry" {
-        if data.at("skills", default: "") != "" {
+        if data.at("skills", default: "") != "" and type(data.skills) == str {
           data.skills = eval(data.skills)
         }
         self.entry(..data)
       }
-      else if kind == "list" {self.list(eval(data))}
+      else if kind == "list" {self.list(data)}
       else if kind == "linkedin" {self.linkedin(data)}
       else if kind == "letter" {self.letter(eval(data.remove("body")), ..data)}
       else {panic("Invalid data kind: " + kind)}
@@ -316,7 +321,8 @@ Generate custom lists of topics; by default, an inline bullet list (see
   let sep = [ #sym.bullet ]
   
   if type(body) == str {return body}
-  else if body.has("text"){return body.text}
+  if type(body) == array {items = (..body,)}
+  else if body.has("text") {return body.text}
   else {
     for child in body.children {
       if child.has("body") {

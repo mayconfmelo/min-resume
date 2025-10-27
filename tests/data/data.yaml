@@ -6,7 +6,7 @@
     title: Chief Work Officer
     organization: A Way More Cooler Corp.
     time: [2024, 2]
-    skills: |
+    skills:
       - Applied the things I learned
       - Did more stuff
       - Accomplished so much more
@@ -16,7 +16,7 @@
     organization: Some Really Cool Inc.
     location: Neverland
     time: [2023, 3, 2024, 1]
-    skills: |
+    skills:
       - Did some stuff
       - Learned some things
       - Accomplished some goals
@@ -26,7 +26,7 @@
     title: Doctorate in Grinding
     organization: Respected University
     time: [2020, 1, 2024, 12]
-    skills: |
+    skills:
       - Learned stuff
       - Studied more stuff
       - Wrote about the stuff I learned
@@ -39,7 +39,7 @@
     - A Less Useful Certification. Educational Institution, 2025.  
 
 - header: Skills  
-- list: |
+- list:
     - Knows things
     - Smile often
     - Talks to a lot of people
