@@ -1,4 +1,4 @@
-#import "@preview/min-resume:0.1.1": resume, entry, list, linkedin, letter
+#import "@preview/min-resume:0.2.0": resume, entry, list, linkedin, letter
 
 #show: resume.with( 
 	name: "John B. Goode Workmann",
@@ -6,9 +6,9 @@
 	photo: image("assets/photo.png"),
 	info: "Relevant personal info",
 	birth: (1997, 05, 19),
-	address: "General Address",
+	address: "Public address",
 	email: "workmann@email.com",
-	phone: "+1 (000) 000-0000"
+	phone: "+1 (000) 000-0000",
 )
 
 
@@ -19,21 +19,22 @@ To be hired and work hard to (hopefully) earn some money.
 
 = Professional Experience
 
-#entry(  
+#entry(
 	title: "Chief Work Officer",
-	organization: "A Way More Cooler Corp.",
-	time: (2024, 2), 
+	organization: "Macrosoft Corp",
+	location: "Bluemond (WA)",
+	time: (2024, 2),
 	skills: [
-	  - Applied the things I learned
 	  - Did more stuff
-	  - Accomplished so much more
+	  - Applied the things I learned
 	  - Learned even more
+	  - Accomplished so much more
 	],
 )  
-#entry(  
-	title: "Proactive Manager", 
-	organization: "Some Really Cool Inc.",
-	location: "Neverland",
+#entry(
+	title: "Proactivity Manager",
+	organization: "Amazônia LLC",
+	location: "Earttle (WA)",
 	time: (2023, 3, 2024, 1),
 	skills: [
 	  - Did some stuff
@@ -46,23 +47,23 @@ To be hired and work hard to (hopefully) earn some money.
 = Education
 
 #entry(
-  title: "Doctorate in Grinding",
-  organization: "Respected University",
+  title: "PhD in Grinding",
+  organization: "Hardvar University",
   time: (2020, 1, 2024, 12),
   skills: [
     - Learned stuff
-    - Studied more stuff
-    - Wrote about the stuff I learned
-    - Wrote a thesis on interesting things
+    - Studied things
+    - Researched some learned stuff
+    - Thesis on interesting things
   ]
 )
 
 
 = Qualification
 
-- #underline[A Really Useful Course]. Educational Institution. Year or Validity.  
-- #underline[A Very Professional Qualification]. Educational Institution. Year or Validity.  
-- A Less Useful Certification. Educational Institution. Year or Validity.  
+- #underline[Really Useful Qualification]. MI Tech. Valid until #{datetime.today().year() + 3}
+- #underline[Very Professional Course]. Ucademy, #{datetime.today().year()}
+- Cool Certification. Genghis Academy, #{datetime.today().year() - 1}
 
 
 = Skills  
@@ -85,10 +86,10 @@ To be hired and work hard to (hopefully) earn some money.
 - Awarded as _Best Employee Ever #datetime.today().year()_
 
 
-#linkedin("linkedin-username")
+#linkedin("username")
 
 
-#letter(to: "Amazing Enterprise LLC")[
+#letter(to: "Googol LLC\nMount View (CA)")[
   Dear Hiring Manager, or to whom it may concern,
 
   Please hire me. I work. A lot. Some say too much, but I think they are the
