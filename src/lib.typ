@@ -10,10 +10,9 @@ sans-serif text on white paper. In fact, someone who sees only the resulting
 résumé might think it was written in Word — but it was actually created with all
 of Typst's benefits and conveniences.
 
-The package was written by a Brazilian, so it follows some common Brazilian
-practices for writing a résumé — but it remains simple and minimalist, even by
-Brazilian standards. Therefore, if some information is missing or unnecessary
-for you, feel free to adapt it to your needs.
+The package was created with Brazilian trends and practices for Human Resources
+in mind; thus, if any information is missing or unnecessary for you, feel free
+to adapt it to your needs.
 
 = Options
 :show.with resume:
@@ -34,13 +33,12 @@ for you, feel free to adapt it to your needs.
   email: none, /// <- string
     /// Email address. |
   phone: none, /// <- string
-    /// Phone number, started by `+` country code separated by space. |
+    /** Phone number, started by #url("https://www.countrycode.org/")[
+        country code.] |**/
   data: (), /// <- yaml | dictionary
     /// Generate YAML-based document (see @data section). |
   cfg: (:), /// <- dictionary
     /// Custom settings (see @cfg section). |
-  translation: yaml("assets/lang.yaml"), /// <- yaml | toml | dictionary
-    /// Translation data (see `src/assets/lang.yaml` file). |
   typst-defaults: false, /// <- boolean
     /// Use Typst defaults instead of min-resume defaults. |
   body
@@ -55,6 +53,7 @@ for you, feel free to adapt it to your needs.
   
   let birth = birth
   let photo = photo
+  let phone = phone
   let font-size = default(
     when: text.size == 11pt,
     value: 12pt,
@@ -80,13 +79,15 @@ for you, feel free to adapt it to your needs.
       /// Display `#list` content as inline, unnumbered, or numbered topics. |
     entry-time-calc: true, /// <- boolean
       /// Show period between dates of `#entry(time)` commands. |
-    data-assets: (:) /// <- dictionary
-      /// Expose assets to be used in YAML-based document generation. |
+    data-assets: (:), /// <- dictionary
+      /// `(name: asset)`\ Expose assets inside YAML-based document scope. |
+    transl: yaml("assets/lang.yaml"), /// <- yaml | toml | dictionary
+      /// Translation data (see `src/assets/lang.yaml` file). |
   ) + cfg
   
   storage.add("cfg", cfg, namespace: "min-resume")
   
-  transl(data: translation)
+  transl(data: cfg.transl)
   
   set document(
     title: name + " - " + title,
@@ -182,16 +183,16 @@ for you, feel free to adapt it to your needs.
   personal += address + "." + linebreak()
   if email != none {personal += link("mailto:" + email) + linebreak()}
   if phone != none {
-    let display = phone
-    let url = "https://wa.me/" + phone.replace(regex("[^0-9]"), "")
-        
-    // Remove country code from phone number
-    if cfg.country-code == false {
-      let country-code = phone.find(regex("^\+(\d+)"))
-      display = phone.replace(country-code, "")
-    }
+    assert(
+      phone.starts-with("+"),
+      message: "Telephone country code required (e.g.: +1 000 000-0000)"
+    )
     
-    personal += link(url, display)
+    let url = "https://wa.me/" + phone.replace(regex("[^0-9]"), "")
+    
+    if cfg.country-code == false {phone = phone.replace(regex("^\+\d+"), "")}
+    
+    personal += link(url, phone.trim())
   }
   
   grid(
@@ -288,6 +289,7 @@ for you, feel free to adapt it to your needs.
   }
 }
 
+
 /// = Commands
 
 /**
@@ -305,6 +307,7 @@ for you, feel free to adapt it to your needs.
   
   storage.add("letter", data, append: true, namespace: "min-resume")
 }
+
 
 /**
 == Custom List
@@ -338,6 +341,7 @@ Generate custom lists of topics; by default, an inline bullet list (see
     panic("Invalid #resume(cfg.lists) mode: " + repr(mode))
   }
 }
+
 
 /**
 == Data Entry
