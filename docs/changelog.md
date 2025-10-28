@@ -35,13 +35,13 @@
 - Removed: `#resume(font)`
 - Added: Development tests (using `tt`)
 - Added: `#resume(typst-defaults)` to disable _min-resume_ defaults
-- Added: `#resume(data)` for YAML-based résumé
+- Added: `#resume(data)` for YAML-based document
 - Added: `#resume(cfg)` for general settings
-- Updated: `#resume(show-country-code)` &larr; `#resume(cfg.country-code)`
-- Updated: `#resume(letter)` &larr; `#resume(cfg.letter-show)`
-- Updated: `#resume(skills)` &larr; `#resume(cfg.lists)`
-- Updated: `#resume(lang-data)` &larr; `#resume(translation)`
-- Updated: `#resume(personal)` &larr; `#resume(info)`
-- Updated: `#skills` &larr; `#list`
-- Updated: `#xp`/`#edu` &larr; `#entry`
-- Updated: `#Linkedin-qrcode` &larr; `#linkedin`
+- Updated: `#resume(show-country-code)` &rarr; `#resume(cfg.country-code)`
+- Updated: `#resume(letter)` &rarr; `#resume(cfg.letter-show)`
+- Updated: `#resume(skills)` &rarr; `#resume(cfg.lists)`
+- Updated: `#resume(lang-data)` &rarr; `#resume(cfg.transl)`
+- Updated: `#resume(personal)` &rarr; `#resume(info)`
+- Updated: `#skills` &rarr; `#list`
+- Updated: `#xp`/`#edu` &rarr; `#entry`
+- Updated: `#linkedin-qrcode` &rarr; `#linkedin`

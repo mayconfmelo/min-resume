@@ -55,7 +55,7 @@ spell correct="no":
   fi
   codespell $arg \
     --skip "*.pdf,./dev/*,.git/*,./docs/assets/manual-pt.typ,./template/*,./src/assets/lang.yaml" \
-    --ignore-words-list "Heros"
+    --ignore-words-list "Heros,heros"
 
 # init template in dev/
 init:

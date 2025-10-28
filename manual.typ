@@ -14,25 +14,33 @@
 )
 
 = YAML Data Structure <data>
+
 ```yaml
-- header: Section
-- text: Typst code
+- header: String
+- code: String
 - letter:
-    to: Receiver
-    body: Content
+    to: String
+    body: String
 - list: Content
 - entry:
-    title: Name
-    organization: Name
-    location: Place
+    title: String
+    organization: String
+    location: String
     time: [1997, 5]
-    skills: List
+    skills: Array or String
 - linkedin: String
 ```
-The file must be a YAML array, where each item generates a header, Typst code,
-or _min-resume_ command, in the same order; each of those items must be a
-dictionary with one and only one key; the value of those keys can be a string or
-another dictionary (see `tests/data/data.yaml` file).
+The file must be a YAML array, and each array item must be a dictionary with one
+and only one key --- mind the indentation for options; the content is generated
+in the same order as the array (see `tests/data/data.yaml` file). Multiline YAML
+string values are allowed.
+
+/ `header`: Generate a section heading.
+/ `code`: Evaluate Typst code from string.
+/ `letter`: Generate the professional letter.
+/ `list`: Generate a special inline lists.
+/ `entry`: Generate a job experience/academic formation entry.
+/ `linkedin`: Generate a Linkedin profile QR code.
 
 
 = Copyright
