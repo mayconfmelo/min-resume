@@ -2,6 +2,21 @@
 // TODO: Implement web résumé (HTML) when stable
 
 /**#v(1fr)#outline()#v(1.2fr)#pagebreak()
+= Quick Start
+```typ
+#import "@preview/min-resume:0.2.0": resume
+#show: manual.resume(
+  name: "Name",
+  title: "Academic Title and/or Occupation",
+  photo: image("photo.png"),
+  personal: "Relevant personal info",
+  birth: (1997, 05, 19),
+  address: "Public Address",
+  email: "example@email.com",
+  phone: "+1 (000) 000-0000",
+)
+```
+
 = Description
 Generate a modern and straightforward résumé that meets today's Human Resources
 demands for assertiveness. There are no colorful designs, images, creative fonts,
@@ -235,7 +250,10 @@ to adapt it to your needs.
         }
         self.entry(..data)
       }
-      else if kind == "list" {self.list(data)}
+      else if kind == "list" {
+        if type(data) == str {data = eval(data)}
+        self.list(data)
+      }
       else if kind == "linkedin" {self.linkedin(data)}
       else if kind == "letter" {self.letter(eval(data.remove("body")), ..data)}
       else {panic("Invalid data kind: " + kind)}
@@ -372,6 +390,7 @@ Insert a professional experience or academic degree.
   import "@preview/toolbox:0.1.0": get, storage
   import "@preview/datify:1.0.0": custom-date-format
   
+  let cfg = storage.get("cfg", namespace: "min-resume")
   let today = datetime.today()
   let end = ()
   let start = ()
@@ -388,7 +407,7 @@ Insert a professional experience or academic degree.
   end = get.date(..end)
   
   strong(title) + ", "
-  emph(organization)
+  emph(organization + ".")
   linebreak()
   
   if (today - end).weeks() < 4 {
@@ -404,12 +423,13 @@ Insert a professional experience or academic degree.
     custom-date-format(end, pattern: "MMM/yyyy")
   }
   
-  if storage.get("cfg", namespace: "min-resume").entry-time-calc {
+  if cfg.entry-time-calc {
     let weeks = (end - start).weeks()
     let years = int(weeks / 52)
     let months = int( (weeks - (years * 52)) / 4 )
+    let something = years > 0 or months > 0
     
-    " ("
+    if something {" ("}
     if years > 0 {
       let key = "year" + if years != 1 {"s"}
       
@@ -423,7 +443,7 @@ Insert a professional experience or academic degree.
       str(months) + " "
       transl(key)
     }
-    ")"
+    if something {")"}
   }
   "."
   

@@ -8,9 +8,9 @@
 #transl(data: yaml("/src/assets/lang.yaml"))
 #let today = datetime.today()
 
-#entry(  
+#entry(
 	title: "Title",
-	organization: "Organization.",
+	organization: "Organization",
 	location: "Location",
   time: (2024, 2, 2025, 7), 
 	skills: [
@@ -19,8 +19,8 @@
 	  - Baz
 	],
 )
-#entry(  
+#entry(
 	title: "Title",
-	organization: "Organization.",
+	organization: "Organization",
   time: (2020, 2, 2025, 1),
 )

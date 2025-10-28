@@ -16,7 +16,7 @@
     organization: Some Really Cool Inc.
     location: Neverland
     time: [2023, 3, 2024, 1]
-    skills:
+    skills: |
       - Did some stuff
       - Learned some things
       - Accomplished some goals
