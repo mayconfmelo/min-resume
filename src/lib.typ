@@ -1,4 +1,4 @@
-// NAME: Minimal Résumé
+// Minimal Résumé
 // TODO: Implement web résumé (HTML) when stable
 
 /**#v(1fr)#outline()#v(1.2fr)#pagebreak()

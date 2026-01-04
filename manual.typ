@@ -1,5 +1,3 @@
-// NAME: Manual for min-book
-
 #import "@preview/min-manual:0.2.2": manual, arg, univ, url
 #let info = toml("typst.toml").package
 
