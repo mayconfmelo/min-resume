@@ -112,6 +112,6 @@ To be hired and work hard to (hopefully) earn some money.
   genuine passion for making your company even greater and wealthier. Please,
   let me prove that exhaustion is just another word for "commitment."
   
-  Eagerly --- and already working on this application overtime ---,\
+  Eagerly,\
   John B. Goode Workmann.
 ] 
