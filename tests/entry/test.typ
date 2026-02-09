@@ -1,5 +1,5 @@
 #import "/src/lib.typ": entry
-#import "@preview/toolbox:0.1.0": storage
+#import "@preview/nexus-tools:0.1.0": storage
 #import "@preview/transl:0.1.1": transl
 #set page(width: 15cm, height: auto, margin: 1em)
 

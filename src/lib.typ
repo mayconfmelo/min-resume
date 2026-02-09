@@ -63,7 +63,7 @@ to adapt it to your needs.
   assert.eq(type(cfg), dictionary, message: "#resume(cfg) must be dictionary")
   assert.eq(type(data), array, message: "#resume(data) must be array")
   
-  import "@preview/toolbox:0.1.0": storage, default, get, its
+  import "@preview/nexus-tools:0.1.0": storage, default, get, its
   import "@preview/transl:0.1.1": transl
   
   let birth = birth
@@ -319,7 +319,7 @@ to adapt it to your needs.
     /// Letter receiver.
   body
 ) = context {
-  import "@preview/toolbox:0.1.0": storage
+  import "@preview/nexus-tools:0.1.0": storage
 
   let data = (to: to, body: body)
   
@@ -334,7 +334,7 @@ Generate custom lists of topics; by default, an inline bullet list (see
 `cfg.lists` option in @cfg).
 **/
 #let list(body) = context {
-  import "@preview/toolbox:0.1.0": storage
+  import "@preview/nexus-tools:0.1.0": storage
   import "origin.typ"
   
   let mode = storage.get("cfg", namespace: "min-resume").lists
@@ -387,7 +387,7 @@ Insert a professional experience or academic degree.
   )
   
   import "@preview/transl:0.1.1": transl
-  import "@preview/toolbox:0.1.0": get, storage
+  import "@preview/nexus-tools:0.1.0": get, storage
   import "@preview/datify:1.0.0": custom-date-format
   
   let cfg = storage.get("cfg", namespace: "min-resume")
