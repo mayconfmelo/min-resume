@@ -70,10 +70,10 @@ to adapt it to your needs.
   let photo = photo
   let phone = phone
   let font-size = default(
-    when: text.size == 11pt,
+    when: text.size == 11pt and not typst-defaults,
     value: 12pt,
     otherwise: text.size,
-    typst-defaults
+    false
   )
   let font-title = default(
     when: text.font == "libertinus serif",
