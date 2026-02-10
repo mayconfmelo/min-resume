@@ -1,12 +1,8 @@
 #import "@preview/min-manual:0.3.0": manual, arg, univ, url
-#let info = toml("typst.toml").package
 
 #show: manual.with(
   title: "Minimal Résumé",
-  package: "min-book:1.3.0",
-  description: info.description,
-  authors: info.authors,
-  license: info.license,
+  manifest: toml("typst.toml"),
   logo: image("docs/assets/manual-logo.png"),
   from-comments: read("src/lib.typ")
 )
