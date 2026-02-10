@@ -3,5 +3,5 @@
   name: "Name",
   address: "General Address",
   data: yaml("data.yaml"),
-  typst-defaults: true,
+  cfg: (typst-defaults: true),
 )

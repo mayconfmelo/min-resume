@@ -1,10 +1,12 @@
 #import "/src/lib.typ": entry
 #import "@preview/nexus-tools:0.1.0": storage
-#import "@preview/transl:0.1.1": transl
+#import "@preview/transl:0.2.0": transl
 #set page(width: 15cm, height: auto, margin: 1em)
 
-#storage.add("cfg", (entry-time-calc: true), append: true, namespace: "min-resume")
-#storage.add("cfg", (lists: par), append: true, namespace: "min-resume")
+#storage.add("cfg",
+  (entry-time-calc: true, entry-dates: "MMM/yyyy", entry-period: true, lists: par),
+  append: true, namespace: "min-resume"
+)
 #transl(data: yaml("/src/assets/lang.yaml"))
 #let today = datetime.today()
 
@@ -12,7 +14,7 @@
 	title: "Title",
 	organization: "Organization",
 	location: "Location",
-  time: (2024, 2, 2025, 7), 
+  time: (from: (2024, 2), to: (2025, 7, 4)), 
 	skills: [
 	  - Foo
 	  - Bar
@@ -22,5 +24,5 @@
 #entry(
 	title: "Title",
 	organization: "Organization",
-  time: (2020, 2, 2025, 1),
+  time: (from: (2020, 2), to: (2025, 1)),
 )

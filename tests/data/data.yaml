@@ -15,7 +15,9 @@
     title: Proactive Manager 
     organization: Some Really Cool Inc.
     location: Neverland
-    time: [2023, 3, 2024, 1]
+    time:
+      from: [2023, 3]
+      to: [2024, 1]
     skills: |
       - Did some stuff
       - Learned some things
@@ -25,7 +27,9 @@
 - entry:
     title: Doctorate in Grinding
     organization: Respected University
-    time: [2020, 1, 2024, 12]
+    time:
+      from: [2020, 1]
+      to: [2024, 12]
     skills:
       - Learned stuff
       - Studied more stuff
