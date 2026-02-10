@@ -12,11 +12,13 @@ keywords = [
 repository = "https://github.com/mayconfmelo/min-resume"
 exclude = [
   "dev/",
-  "test/",
+  "tests/",
   "docs/",
   "scripts/",
-  ".git",
+  ".git/",
+  ".github/",
   ".gitignore",
+  "manual.typ",
   "justfile",
 ]
 

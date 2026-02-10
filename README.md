@@ -15,8 +15,8 @@
 
 
 [![Manual](https://img.shields.io/badge/Manual-%23353c44)](https://raw.githubusercontent.com/mayconfmelo/min-resume/refs/tags/0.2.0/docs/manual.pdf)
-[![Example PDF](https://img.shields.io/badge/Example-PDF-%23777?labelColor=%23353c44)](https://raw.githubusercontent.com/mayconfmelo/min-resume/refs/tags/0.2.0/docs/example.pdf)
-[![Example SRC](https://img.shields.io/badge/Example-SRC-%23777?labelColor=%23353c44)](https://github.com/mayconfmelo/min-resume/blob/0.2.0/template/main.typ)
+[![Example PDF](https://img.shields.io/badge/Example-.pdf-%23777?labelColor=%23353c44)](https://raw.githubusercontent.com/mayconfmelo/min-resume/refs/tags/0.2.0/docs/example.pdf)
+[![Example SRC](https://img.shields.io/badge/Example-.typ-%23777?labelColor=%23353c44)](https://github.com/mayconfmelo/min-resume/blob/0.2.0/template/main.typ)
 [![Changelog](https://img.shields.io/badge/Changelog-%23353c44)](https://github.com/mayconfmelo/min-resume/blob/main/docs/changelog.md)
 [![Contribute](https://img.shields.io/badge/Contribute-%23353c44)](https://github.com/mayconfmelo/min-resume/blob/main/docs/contributing.md)
 
