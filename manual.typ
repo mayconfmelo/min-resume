@@ -1,4 +1,4 @@
-#import "@preview/min-manual:0.2.2": manual, arg, univ, url
+#import "@preview/min-manual:0.3.0": manual, arg, univ, url
 #let info = toml("typst.toml").package
 
 #show: manual.with(
@@ -24,7 +24,9 @@
     title: String
     organization: String
     location: String
-    time: [1997, 5]
+    time:
+      from: [1997, 5]
+      to: [2000, 1]
     skills: Array or String
 - linkedin: String
 ```

@@ -37,7 +37,6 @@
 - Added: Development tests (using `tt`)
 - Added: `#resume(data)` create document from YAML data
 - Added: `#resume(cfg)` for general settings
-- Updated: `#resume(cfg)` options
   - `cfg.entry-period` shows the time period of `#entry`
   - `cfg.entry-dates` set date pattern of `#entry`
   - `cfg.data-assets` load data to be accessible from YAML

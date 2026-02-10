@@ -35,7 +35,7 @@ To be hired and work hard to (hopefully) earn some money.
 	title: "Proactivity Manager",
 	organization: "Amazônia LLC",
 	location: "Earttle (WA)",
-	time: (from: (2023, 4, 1), to: (2023, 5, 2)),
+	time: (from: (2023, 4, 1), to: (2023, 8, 2)),
 	skills: [
 	  - Did some stuff
 	  - Learned some things
