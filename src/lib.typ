@@ -54,8 +54,6 @@ to adapt it to your needs.
     /// Generate YAML-based document (see @data section). |
   cfg: (:), /// <- dictionary
     /// Custom settings (see @cfg section). |
-  typst-defaults: false, /// <- boolean
-    /// Use Typst defaults instead of min-resume defaults. |
   body
 ) = context {
   assert.ne(name, none, message: "#resume(name) required")
@@ -64,22 +62,7 @@ to adapt it to your needs.
   assert.eq(type(data), array, message: "#resume(data) must be array")
   
   import "@preview/nexus-tools:0.1.0": storage, default, get, its
-  import "@preview/transl:0.1.1": transl
-  
-  let birth = birth
-  let photo = photo
-  let phone = phone
-  let font-size = default(
-    when: text.size == 11pt and not typst-defaults,
-    value: 12pt,
-    otherwise: text.size,
-    false
-  )
-  let font-title = default(
-    when: text.font == "libertinus serif",
-    value: (font: ("tex gyre adventor", "century gothic")),
-    typst-defaults
-  )
+  import "@preview/transl:0.2.0": transl
   
   /**
   == Custom Settings <cfg>
@@ -92,13 +75,31 @@ to adapt it to your needs.
       /// Show `#letter` content. |
     lists: par, /// <- par | list | enum
       /// Display `#list` content as inline, unnumbered, or numbered topics. |
-    entry-time-calc: true, /// <- boolean
+    entry-period: true, /// <- boolean
       /// Show period between dates of `#entry(time)` commands. |
+    entry-dates: "MMM/yyyy", /// <- string
+      /// Date pattern used in `#entry`. |
     data-assets: (:), /// <- dictionary
       /// `(name: asset)`\ Expose assets inside YAML-based document scope. |
     transl: yaml("assets/lang.yaml"), /// <- yaml | toml | dictionary
       /// Translation data (see `src/assets/lang.yaml` file). |
+    typst-defaults: false, /// <- boolean
+      /// Revert back Typst defaults instead of those defined by _min-resume_. |
   ) + cfg
+  let birth = birth
+  let photo = photo
+  let phone = phone
+  let font-size = default(
+    when: text.size == 11pt and not cfg.typst-defaults,
+    value: 12pt,
+    otherwise: text.size,
+    false
+  )
+  let font-title = default(
+    when: text.font == "libertinus serif",
+    value: (font: ("tex gyre adventor", "century gothic")),
+    cfg.typst-defaults
+  )
   
   storage.add("cfg", cfg, namespace: "min-resume")
   
@@ -113,7 +114,7 @@ to adapt it to your needs.
     ..default(
       when: page.margin == auto,
       value: (margin: 2cm),
-      typst-defaults
+      cfg.typst-defaults
     ),
     header: context if locate(here()).page() > 2 {
       // Name and title in header after 1st page
@@ -127,12 +128,12 @@ to adapt it to your needs.
     ..default(
       when: not par.justify,
       value: (justify: true),
-      typst-defaults
+      cfg.typst-defaults
     ),
     ..default(
       when: par.leading == 0.65em,
       value: (leading: 0.6em),
-      typst-defaults
+      cfg.typst-defaults
     ),
   )
   set text(
@@ -140,12 +141,12 @@ to adapt it to your needs.
     ..default(
       when: text.font == "libertinus serif",
       value: (font: ("Tex Gyre Heros", "Arial")),
-      typst-defaults
+      cfg.typst-defaults
     ),
     ..default(
       when: text.hyphenate == auto,
       value: (hyphenate: true),
-      typst-defaults
+      cfg.typst-defaults
     ),
   )
   set terms(separator: [: ], tight: true)
@@ -373,77 +374,86 @@ Insert a professional experience or academic degree.
     /// Organization related to the entry (enterprise, university, etc.). |
   location: none, /// <- string | context
     /// Organization location. |
-  time: (), /// <- array
-    /** `(YYYY, DD, YYYY, DD)`\
+  time: (:), /// <- dictionary of arrays | dictionary of datetimes | array
+    /** `(from: (yyyy, mm, dd), to: (yyyy, mm, dd))   (yyyy, mm, dd)`\
         Start and end of entry; omit end date to insert a current one. |**/
   skills: none, /// <- list | string
     /// Related skills and topics (the same as `#list`).
 ) = context {
   assert.ne(title, none, message: "#entry(title) required")
   assert.ne(organization, none, message: "#entry(organization) required")
-  assert(
-    time.len() == 2 or time.len() == 4,
-    message: "#entry(time) must be (YYYY, DD) or (YYYY, DD, YYYY, DD)"
-  )
+  assert.ne(time, (:), message: "#entry(time) required")
+  assert(type(time) in (array, dictionary), message: "#entry(time) must be array or dictionary")
   
-  import "@preview/transl:0.1.1": transl
+  import "@preview/transl:0.2.0": transl
   import "@preview/nexus-tools:0.1.0": get, storage
   import "@preview/datify:1.0.0": custom-date-format
   
   let cfg = storage.get("cfg", namespace: "min-resume")
   let today = datetime.today()
-  let end = ()
-  let start = ()
-  let diff
-  
-  start.push(time.at(0))
-  start.push(time.at(1))
-  start.push(1)
-  start = get.date(..start)
-  
-  end.push( time.at(2, default: today.year()) )
-  end.push( time.at(3, default: today.month()) )
-  end.push(2)
-  end = get.date(..end)
+  let time = time
   
   strong(title) + ", "
   emph(organization + ".")
   linebreak()
   
-  if (today - end).weeks() < 4 {
-    let since = transl("since", mode: str)
-    
-    upper(since.at(0)) + since.slice(1) + " "
-  }
+  if type(time) == array {time = (from: time)}
+  if not "to" in time {time.insert("to", today)}
+  if type(time.from) == datetime {time.from = (time.from,)}
+  if type(time.to) == datetime {time.to = (time.to,)}
   
-  custom-date-format(start, pattern: "MMM/yyyy")
+  assert("from" in time, message: "#entry(time.from) required")
+  assert("to" in time, message: "#entry(time.to) required")
   
-  if (today - end).weeks() > 4 {
+  time.from = get.date(..time.from)
+  time.to = get.date(..time.to)
+  
+  // Insert the equivalent of "Since" if the end date was less than 1 month ago.
+  if (today - time.to).weeks() < 4 {transl("Since", mode: str) + " "}
+  
+  // Start date
+  custom-date-format(time.from, pattern: cfg.entry-dates)
+  
+  // Insert the end date if it is more than 1 month after the start date.
+  if (today - time.to).weeks() > 4 {
     " " + transl("to") + " "
-    custom-date-format(end, pattern: "MMM/yyyy")
+    
+    custom-date-format(time.to, pattern: cfg.entry-dates)
   }
   
-  if cfg.entry-time-calc {
-    let weeks = (end - start).weeks()
+  // Calculates the duration of the entry period.
+  if cfg.entry-period {
+    let weeks = (time.to - time.from).weeks()
     let years = int(weeks / 52)
-    let months = int( (weeks - (years * 52)) / 4 )
-    let something = years > 0 or months > 0
+    let rounded = datetime(
+      year: time.from.year() + years,
+      month: time.from.month(),
+      day: time.from.day(),
+    )
+    let months = int( (time.to - rounded).weeks() / 4.343 )
+    // FIXME: months calculation innacurate by a couple of days
+    //let months = ( (weeks - (years * 52)) / 4.33 )
     
-    if something {" ("}
-    if years > 0 {
-      let key = "year" + if years != 1 {"s"}
+    if years > 0 or months > 0 {
+      " ("
       
-      str(years) + " "
-      transl(key) + " "
-      if months > 0 {transl("and") + " "}
-    }
-    if months > 0 {
-      let key = "month" + if months != 1 {"s"}
+      if years > 0 {
+        let key = "year" + if years > 1 {"s"}
+        
+        str(years) + " "
+        transl(key)
+        
+        if months > 0 {" " + transl("and") + " "}
+      }
+      if months > 0 {
+        let key = "month" + if months > 1 {"s"}
+        
+        str(months) + " "
+        transl(key)
+      }
       
-      str(months) + " "
-      transl(key)
+      ")"
     }
-    if something {")"}
   }
   "."
   
