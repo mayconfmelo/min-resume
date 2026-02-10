@@ -431,7 +431,7 @@ Insert a professional experience or academic degree.
       day: time.from.day(),
     )
     let months = int( (time.to - rounded).weeks() / 4.343 )
-    // FIXME: months calculation innacurate by a couple of days
+    // FIXME: months calculation inaccurate by a couple of days
     //let months = ( (weeks - (years * 52)) / 4.33 )
     
     if years > 0 or months > 0 {
