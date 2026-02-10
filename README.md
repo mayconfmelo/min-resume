@@ -73,11 +73,10 @@ to adapt it to your needs.
   - Photo
   - Linkedin profile QR Code
   - Professional letter
-- Standard job experience/academic formation entries
+- Job experience & academic formation entries
   - Automatic time calculation
 - Special inline lists
 - Linkedin profile QR code
-- Professional letter
 - YAML-generated document
 
 
