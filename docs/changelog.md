@@ -25,23 +25,28 @@
 ### 0.2.0
 
 - Complete internal re-design
-- Removed: `#resume(date)`
-- Removed: `#resume(paper)`
-- Removed: `#resume(lang)`
-- Removed: `#resume(justify)`
-- Removed: `#resume(line-space)`
-- Removed: `#resume(par-margin)`
-- Removed: `#resume(margin)`
-- Removed: `#resume(font)`
+- Removed: `#resume` options
+  - `date` &rarr; `#datetime.today()`
+  - `paper` &rarr; `#set page(paper)`
+  - `lang` &rarr; `#set text(lang, region)`
+  - `justify` &rarr; `#set par(justify)`
+  - `line-space` &rarr; `#set par(leading)`
+  - `par-margin` &rarr; `#set par(spacing)`
+  - `margin` &rarr; `#set page(margin)`
+  - `font` &rarr; `#set text(font)`
 - Added: Development tests (using `tt`)
-- Added: `#resume(typst-defaults)` to disable _min-resume_ defaults
-- Added: `#resume(data)` for YAML-based document
+- Added: `#resume(data)` create document from YAML data
 - Added: `#resume(cfg)` for general settings
-- Updated: `#resume(show-country-code)` &rarr; `#resume(cfg.country-code)`
-- Updated: `#resume(letter)` &rarr; `#resume(cfg.letter-show)`
-- Updated: `#resume(skills)` &rarr; `#resume(cfg.lists)`
-- Updated: `#resume(lang-data)` &rarr; `#resume(cfg.transl)`
-- Updated: `#resume(personal)` &rarr; `#resume(info)`
+- Updated: `#resume(cfg)` options
+  - `cfg.entry-period` shows the time period of `#entry`
+  - `cfg.entry-dates` set date pattern of `#entry`
+  - `cfg.data-assets` load data to be accessible from YAML
+  - `cfg.typst-defaults` revert back to typst defaults
+  - `#resume(show-country-code)` &rarr; `cfg.country-code`
+  - `#resume(letter)` &rarr; `cfg.letter-show`
+  - `#resume(skills)` &rarr; `cfg.lists`
+  - `#resume(lang-data)` &rarr; `cfg.transl`
+  - `#resume(personal)` &rarr; `info`
 - Updated: `#skills` &rarr; `#list`
-- Updated: `#xp`/`#edu` &rarr; `#entry`
+- Updated: `#xp` & `#edu` &rarr; `#entry`
 - Updated: `#linkedin-qrcode` &rarr; `#linkedin`
